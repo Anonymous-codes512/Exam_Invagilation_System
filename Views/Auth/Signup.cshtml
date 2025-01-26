@@ -1,0 +1,129 @@
+﻿@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Signup Page - Exam_Invagilation_System</title>
+	<link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+	<link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet" />
+</head>
+<body>
+	<div class="container">
+		<header>Signup</header>
+		<form>
+			<div class="field">
+				<div class="input-field">
+					<input type="text" placeholder="Enter your name" class="name" />
+				</div>
+			</div>
+
+			<div class="field email-field">
+				<div class="input-field">
+					<input type="email" placeholder="Enter your email" class="email" />
+				</div>
+				<span class="error email-error">
+					<i class="bx bx-error-circle error-icon"></i>
+					<p class="error-text">Please enter a valid email</p>
+				</span>
+			</div>
+
+			<div class="field create-password">
+				<div class="input-field">
+					<input type="password"
+						   placeholder="Create password"
+						   class="password" />
+					<i class="bx bx-hide show-hide"></i>
+				</div>
+				<span class="error password-error">
+					<i class="bx bx-error-circle error-icon"></i>
+					<p class="error-text">
+						Please enter atleast 8 charatcer with number, symbol, small and
+						capital letter.
+					</p>
+				</span>
+			</div>
+			<div class="field confirm-password">
+				<div class="input-field">
+					<input type="password"
+						   placeholder="Confirm password"
+						   class="cPassword" />
+					<i class="bx bx-hide show-hide"></i>
+				</div>
+				<span class="error cPassword-error">
+					<i class="bx bx-error-circle error-icon"></i>
+					<p class="error-text">Password don't match</p>
+				</span>
+			</div>
+			<div class="input-field button">
+				<input type="submit" value="Signup" />
+			</div>
+			<span class="dont-have-account">Already have an account. &nbsp;<a asp-controller="Auth" asp-action="Login">Login</a></span>
+
+		</form>
+	</div>
+
+	<script>
+		const form = document.querySelector("form");
+		const emailField = form.querySelector(".email-field");
+		const emailInput = emailField.querySelector(".email");
+		const passField = form.querySelector(".create-password");
+		const passInput = passField.querySelector(".password");
+		const cPassField = form.querySelector(".confirm-password");
+		const cPassInput = cPassField.querySelector(".cPassword");
+
+		function checkEmail() {
+			const emaiPattern = /^[^ ]+[^ ]+\.[a-z]{2,3}$/;
+			if (!emailInput.value.match(emaiPattern)) {
+				return emailField.classList.add("invalid");
+			}
+			emailField.classList.remove("invalid");
+		}
+
+		const eyeIcons = document.querySelectorAll(".show-hide");
+		eyeIcons.forEach((eyeIcon) => {
+			eyeIcon.addEventListener("click", () => {
+				const pInput = eyeIcon.parentElement.querySelector("input");
+				if (pInput.type === "password") {
+					eyeIcon.classList.replace("bx-hide", "bx-show");
+					return (pInput.type = "text");
+				}
+				eyeIcon.classList.replace("bx-show", "bx-hide");
+				pInput.type = "password";
+			});
+		});
+
+		function createPass() {
+			const passPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$!%*?&])[A-Za-z\d$!%*?&]{8,}$/;
+			if (!passInput.value.match(passPattern)) {
+				return passField.classList.add("invalid");
+			}
+			passField.classList.remove("invalid");
+		}
+
+		function confirmPass() {
+			if (passInput.value !== cPassInput.value || cPassInput.value === "") {
+				return cPassField.classList.add("invalid");
+			}
+			cPassField.classList.remove("invalid");
+		}
+
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+			checkEmail();
+			createPass();
+			confirmPass();
+			emailInput.addEventListener("keyup", checkEmail);
+			passInput.addEventListener("keyup", createPass);
+			cPassInput.addEventListener("keyup", confirmPass);
+
+			if (!emailField.classList.contains("invalid") && !passField.classList.contains("invalid") && !cPassField.classList.contains("invalid")) {
+					location.href = form.getAttribute("action");
+			}
+		});
+	</script>
+</body>
+</html>

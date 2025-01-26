@@ -1,0 +1,137 @@
+﻿@{
+	ViewData["Title"] = "Dashboard";
+	ViewData["StyleSheet"] = "~/css/dashboard.css";
+}
+
+<div class="dashboard-container">
+	<!-- Row for Stats -->
+	<div class="row">
+		<div class="col-12 col-md-4 card-div">
+			<div class="card stat-card p-2">
+				<h5 class="card-title">Total Student</h5>
+				<p class="stat-value">1500</p>
+			</div>
+		</div>
+		<div class="col-12 col-md-4 card-div">
+			<div class="card stat-card p-2">
+				<h5 class="card-title">Appeared In Exams</h5>
+				<p class="stat-value">1450</p>
+			</div>
+		</div>
+		<div class="col-12 col-md-4 card-div">
+			<div class="card stat-card p-2">
+				<h5 class="card-title">Not Appeared In Exams</h5>
+				<p class="stat-value">50</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- Row for Graphs and Insights -->
+	<div class="row mt-4">
+		<!-- Chart 1: Teacher Attendance -->
+		<div class="col-12 col-md-6">
+			<div class="card chart-card p-2">
+				<h5 class="card-title">Teacher Attendance</h5>
+				<canvas id="teacherAttendanceChart"></canvas>
+			</div>
+		</div>
+
+		<!-- Chart 2: Exam Summary -->
+		<div class="col-12 col-md-6">
+			<div class="card chart-card p-2">
+				<h5 class="card-title">Exam Summary</h5>
+				<canvas id="examSummaryChart"></canvas>
+			</div>
+		</div>
+	</div>
+
+	<!-- Table for unfair means reporting -->
+	<div class="container-fluid p-0 mt-4">
+		<div class="card shadow-sm">
+			<div class="card-header bg-primary text-white">
+				<h4>Unfair Means Reporting</h4>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-striped table-bordered table-hover">
+						<thead class="table-dark">
+							<tr>
+								<th>Student Name</th>
+								<th>Roll Number</th>
+								<th>Exam Room</th>
+								<th>Reported By</th>
+								<th>Incident</th>
+								<th>Date</th>
+								<th>Action Taken</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Jane Smith</td>
+								<td>2021-CS-002</td>
+								<td>Room 102</td>
+								<td>Ms. Johnson</td>
+								<td>Talking to another student</td>
+								<td>2025-01-26</td>
+								<td>Marks Deducted</td>
+							</tr>
+							<tr>
+								<td>John Doe</td>
+								<td>2021-CS-001</td>
+								<td>Room 101</td>
+								<td>Mr. Smith</td>
+								<td>Using mobile phone</td>
+								<td>2025-01-25</td>
+								<td>Warning Issued</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Load Chart.js for the charts -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+	var ctx1 = document.getElementById('teacherAttendanceChart').getContext('2d');
+	var teacherAttendanceChart = new Chart(ctx1, {
+		type: 'bar',
+		data: {
+			labels: ['January', 'February', 'March', 'April', 'May'],
+			datasets: [{
+				label: 'Teacher Attendance',
+				data: [85, 90, 75, 88, 92],
+				backgroundColor: 'rgba(75, 192, 192, 0.5)',
+				borderColor: 'rgba(75, 192, 192, 1)',
+				borderWidth: 1
+			}]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: true,
+			aspectRatio: 1.75 // Set aspect ratio
+		}
+	});
+
+	var ctx2 = document.getElementById('examSummaryChart').getContext('2d');
+	var examSummaryChart = new Chart(ctx2, {
+		type: 'pie',
+		data: {
+			labels: ['Completed', 'Pending'],
+			datasets: [{
+				data: [85, 15],
+				backgroundColor: ['#36A2EB', '#FF6384'],
+				hoverBackgroundColor: ['#36A2EB', '#FF6384']
+			}]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: true,
+			aspectRatio: 1.75 // Set aspect ratio
+		}
+	});
+
+</script>
