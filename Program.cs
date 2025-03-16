@@ -1,4 +1,4 @@
-using Exam_Invagilation_System.Entities;
+﻿using Exam_Invagilation_System.Entities;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,20 +7,32 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+// Configure the database context
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ✅ Properly resolve and use AppDbContext for database seeding
+//using (var scope = app.Services.CreateScope())
+//{
+//    Console.WriteLine("Seeding database...");
+//    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>(); // Fix
+//    DBSeeder.SeedDatabase(dbContext);
+//    Console.WriteLine("Database seeded successfully");
+//}
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseDeveloperExceptionPage();
 
 app.UseRouting();
 
@@ -28,5 +40,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-        pattern: "{controller=Auth}/{action=Login}/{id?}");
+    pattern: "{controller=Auth}/{action=Login}/{id?}");
+
 app.Run();

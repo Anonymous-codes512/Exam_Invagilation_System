@@ -4,6 +4,7 @@ using Exam_Invagilation_System.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Exam_Invagilation_System.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250309123144_Add_Room_Table")]
+    partial class Add_Room_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,28 +70,14 @@ namespace Exam_Invagilation_System.Migrations
 
             modelBuilder.Entity("Exam_Invagilation_System.Models.Course", b =>
                 {
-                    b.Property<int>("CourseId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CourseId"));
-
                     b.Property<string>("CourseCode")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CourseName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PreRequisite")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CourseId");
-
-                    b.HasIndex("CourseCode")
-                        .IsUnique();
+                    b.HasKey("CourseCode");
 
                     b.ToTable("Courses");
                 });
@@ -250,7 +239,6 @@ namespace Exam_Invagilation_System.Migrations
                     b.HasOne("Exam_Invagilation_System.Models.Course", "Course")
                         .WithMany("StudentCourses")
                         .HasForeignKey("CourseCode")
-                        .HasPrincipalKey("CourseCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

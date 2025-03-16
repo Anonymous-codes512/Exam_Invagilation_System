@@ -14,7 +14,10 @@
 *, ::before, ::after {
     box-sizing: border-box;
 }
-
+ul{
+    padding:0 !important;
+    margin:0 !important;
+}
 body {
     display: flex;
     flex-direction: row;

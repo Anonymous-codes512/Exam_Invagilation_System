@@ -9,19 +9,19 @@
 		<div class="col-12 col-md-4 card-div">
 			<div class="card stat-card p-2">
 				<h5 class="card-title">Total Student</h5>
-				<p class="stat-value">1500</p>
+				<p class="stat-value">@ViewData["TotalStudents"]</p>
 			</div>
 		</div>
 		<div class="col-12 col-md-4 card-div">
 			<div class="card stat-card p-2">
 				<h5 class="card-title">Appeared In Exams</h5>
-				<p class="stat-value">1450</p>
+				<p class="stat-value">@ViewData["StudentsAppeared"]</p>
 			</div>
 		</div>
 		<div class="col-12 col-md-4 card-div">
 			<div class="card stat-card p-2">
 				<h5 class="card-title">Not Appeared In Exams</h5>
-				<p class="stat-value">50</p>
+				<p class="stat-value">@ViewData["NotAppeared"]</p>
 			</div>
 		</div>
 	</div>
@@ -48,42 +48,37 @@
 	<!-- Table for unfair means reporting -->
 	<div class="container-fluid p-0 mt-4">
 		<div class="card shadow-sm">
-			<div class="card-header bg-primary text-white">
+			<div class="card-header">
 				<h4>Unfair Means Reporting</h4>
 			</div>
 			<div class="card-body">
 				<div class="table-responsive">
 					<table class="table table-striped table-bordered table-hover">
-						<thead class="table-dark">
+						<thead>
 							<tr>
 								<th>Student Name</th>
-								<th>Roll Number</th>
+								<th>Course Code</th>
 								<th>Exam Room</th>
 								<th>Reported By</th>
-								<th>Incident</th>
 								<th>Date</th>
+								<th>Time Slot</th>
+								<th>Incident</th>
 								<th>Action Taken</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>Jane Smith</td>
-								<td>2021-CS-002</td>
-								<td>Room 102</td>
-								<td>Ms. Johnson</td>
-								<td>Talking to another student</td>
-								<td>2025-01-26</td>
-								<td>Marks Deducted</td>
-							</tr>
-							<tr>
-								<td>John Doe</td>
-								<td>2021-CS-001</td>
-								<td>Room 101</td>
-								<td>Mr. Smith</td>
-								<td>Using mobile phone</td>
-								<td>2025-01-25</td>
-								<td>Warning Issued</td>
-							</tr>
+							@foreach (var report in ViewData["CheatingReports"] as IEnumerable<dynamic>)
+							{
+								<tr>
+									<td>@report.StudentName</td>
+									<td>@report.TeacherName</td>
+									<td>@report.CourseCode</td>
+									<td>@report.RoomId</td>
+									<td>@report.Date.ToString("yyyy-MM-dd")</td>
+									<td>@report.TimeSlot</td>
+									<td>@report.Description</td>
+								</tr>
+							}
 						</tbody>
 					</table>
 				</div>
@@ -93,7 +88,6 @@
 </div>
 
 <!-- Load Chart.js for the charts -->
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 	var ctx1 = document.getElementById('teacherAttendanceChart').getContext('2d');
@@ -112,7 +106,7 @@
 		options: {
 			responsive: true,
 			maintainAspectRatio: true,
-			aspectRatio: 1.75 // Set aspect ratio
+			aspectRatio: 1.75
 		}
 	});
 
@@ -130,8 +124,7 @@
 		options: {
 			responsive: true,
 			maintainAspectRatio: true,
-			aspectRatio: 1.75 // Set aspect ratio
+			aspectRatio: 1.75
 		}
 	});
-
 </script>

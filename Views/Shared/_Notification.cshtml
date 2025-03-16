@@ -1,0 +1,35 @@
+﻿@* @if (TempData["success"] != null) *@
+@* { *@
+@*     <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
+@*     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script> *@
+@*     <script type="text/javascript"> *@
+@*         toastr.success('@TempData["success"]'); *@
+@*     </script> *@
+@* } *@
+@* @if (TempData["error"] != null) *@
+@* { *@
+@*     <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
+@*     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script> *@
+@*     <script type="text/javascript"> *@
+@*         toastr.error('@TempData["success"]'); *@
+@*     </script> *@
+@* } *@
+
+@{
+	
+	ViewData["StyleSheet"] = "~/css/_Notification.css";
+}
+
+@if (TempData["success"] != null || TempData["error"] != null)
+{
+	<div class="notification-container">
+		<div class="notification @(TempData["success"] != null ? "notification--success" : "notification--failure")">
+			<div class="notification_body">
+				<i class='bx @(TempData["success"] != null ? "bx-check-circle" : "bx-x-circle")'></i>
+				@TempData["success"]
+				@TempData["error"]
+			</div>
+			<div class="notification_progress"></div>
+		</div>
+	</div>
+}

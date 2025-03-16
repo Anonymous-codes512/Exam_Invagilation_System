@@ -1,5 +1,22 @@
-﻿
-.card {
+﻿.card {
     background-color: var(--white-color) !important;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+    background-color: var(--blue-color);
+    color: var(--grey-color);
+}
+
+.card-title {
+    color: var(--blue-color);
+}
+
+.stat-value {
+    color: var(--grey-color);
+}
+
+.table thead {
+    background-color: var(--blue-color);
+    color: white;
 }

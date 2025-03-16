@@ -1,0 +1,371 @@
+﻿@model TeacherPaginationViewModel
+
+@{
+    ViewData["title"] = "View Teacher Data";
+}
+
+<div class="container-fluid p-0">
+    <h2 class="text-center mb-4">Teachers Management</h2>
+
+    <!-- Buttons for Actions -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addTeacherModal">Add Teacher</button>
+            <button class="btn btn-primary ms-3" onclick="openUploadExcelModal()">Add Excel File</button>
+        </div>
+        <div class="me-3">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search By Employee Number..." style="width: 350px;" onkeyup="searchTable()">
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table" id="teacherTable">
+                <thead>
+                    <tr>
+                        <th>Employee #</th>
+                        <th>Teacher Name</th>
+                        <th>Email</th>
+                        <th>Designation</th>
+                        <th>Department</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var teacher in Model.Teachers)
+                    {
+                        <tr>
+                            <td>@teacher.TeacherEmployeeNumber</td>
+                            <td>@teacher.TeacherName</td>
+                            <td>@teacher.TeacherEmail</td>
+                            <td>@teacher.TeacherDesignation</td>
+                            <td>@teacher.TeacherDepartment</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick='editTeacher(@Html.Raw(Json.Serialize(teacher)))'>
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-danger btn-sm" onclick="openDeleteModal('@teacher.TeacherEmployeeNumber')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Teacher" asp-route-pageNumber="@(Model.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-action="Teacher" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                    </li>
+                }
+
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Teacher" asp-route-pageNumber="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                    </li>
+                }
+            </ul>
+
+        </div>
+    </div>
+
+    <!-- Add Teacher Modal -->
+    <div class="modal fade" id="addTeacherModal" tabindex="-1" aria-labelledby="addTeacherModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title" id="addTeacherModalLabel">Add Teacher</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <form method="post" asp-action="AddTeacher" class="form" id="addTeacherForm" onsubmit="return showLoader('add')">
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <label class="form-label mb-1">Employee Number</label>
+                                <input type="text" class="form-control form-control-sm" name="TeacherEmployeeNumber" placeholder="LECT-BME-001" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label mb-1">Teacher Name</label>
+                                <input type="text" class="form-control form-control-sm" name="TeacherName" required placeholder="Mehmood-Ul-Haq" />
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-6">
+                                <label class="form-label mb-1">Email</label>
+                                <input type="email" class="form-control form-control-sm" name="TeacherEmail" required placeholder="mehmood@cuiwah.edu.pk" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label mb-1">Designation</label>
+                                <select type="text" class="form-control form-control-sm" name="TeacherDesignation" required>
+                                    <option value="">Select Designation</option>
+                                    <option value="lecturer">Lecturer</option>
+                                    <option value="Assistant Professor">Assistant Professor</option>
+                                    <option value="Associate Professor">Associate Professor</option>
+                                    <option value="Professor">Professor</option>
+                                    <option value="Visiting">Visiting</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-12">
+                                <label class="form-label mb-1">Department</label>
+                                <select id="TeacherDepartment" class="form-control form-control-sm" name="TeacherDepartment" required>
+                                    <option value="">Select Department</option>
+                                    <option value="Software Engineering">Software Engineering</option>
+                                    <option value="Computer Science">Computer Science</option>
+                                    <option value="Artificial Intelligence">Artificial Intelligence</option>
+                                    <option value="Electrical Engineering">Electrical Engineering</option>
+                                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                    <option value="Civil Engineering">Civil Engineering</option>
+                                    <option value="Management Sciences">Management Sciences</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer py-2">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" id="addBtn" class="btn btn-primary btn-sm">
+                                <span id="addBtnText">Add Teacher</span>
+                                <span id="addLoader" class="spinner-border spinner-border-sm d-none"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Teacher Modal -->
+    <div class="modal fade" id="editTeacherModal" tabindex="-1" aria-labelledby="editTeacherModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title" id="editTeacherModalLabel">Edit Teacher</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <form method="post" asp-action="EditTeacher" class="form" id="editTeacherForm" onsubmit="return showLoader('edit')">
+                        <input type="hidden" id="editTeacherId" name="TeacherId" />
+
+                        <div class="row g-2">
+                            <div class="col-md-12">
+                                <label for="editTeacherEmployeeNumber" class="form-label mb-1">Teacher Employee Number</label>
+                                <input type="text" id="editTeacherEmployeeNumber" class="form-control form-control-sm" name="TeacherEmployeeNumber" required/>
+                            </div>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <label for="editTeacherName" class="form-label mb-1">Teacher Name</label>
+                                <input type="text" id="editTeacherName" class="form-control form-control-sm" name="TeacherName" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editTeacherEmail" class="form-label mb-1">Email</label>
+                                <input type="email" id="editTeacherEmail" class="form-control form-control-sm" name="TeacherEmail" required />
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-6">
+                                <label for="editTeacherDesignation" class="form-label mb-1">Designation</label>
+                                <select type="text" id="editTeacherDesignation" class="form-control form-control-sm" name="TeacherDesignation" required >
+                                    <option value="lecturer">Lecturer</option>
+                                    <option value="Assistant Professor">Assistant Professor</option>
+                                    <option value="Associate Professor">Associate Professor</option>
+                                    <option value="Professor">Professor</option>
+                                    <option value="Visiting">Visiting</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editTeacherDepartment" class="form-label mb-1">Department</label>
+                                <select type="text" id="editTeacherDepartment" class="form-control form-control-sm" name="TeacherDepartment" required >
+                                        <option value="Software Engineering">Software Engineering</option>
+                                        <option value="Computer Science">Computer Science</option>
+                                        <option value="Artificial Intelligence">Artificial Intelligence</option>
+                                        <option value="Electrical Engineering">Electrical Engineering</option>
+                                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                        <option value="Civil Engineering">Civil Engineering</option>
+                                        <option value="Management Sciences">Management Sciences</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer py-2">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" id="editBtn" class="btn btn-primary btn-sm">
+                                <span id="editBtnText">Update Teacher</span>
+                                <span id="editLoader" class="spinner-border spinner-border-sm d-none"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Excel File Opener -->
+    <div id="uploadExcelModalOverlay"></div>
+    <div id="uploadExcelModal" >
+        <form class="dropzone-box" enctype="multipart/form-data" method="post" asp-action="UploadTeacherExcel" onsubmit="return showLoader('addExcel')">
+            @Html.AntiForgeryToken()
+            <h2>Upload Excel File</h2>
+            <p>Click to upload or drag and drop</p>
+            <div class="dropzone-area">
+                <div class="file-upload-icon">
+                    <i class='bx bx-cloud-upload'></i>
+                </div>
+                <input type="file" id="upload-file" name="file" accept=".xls,.xlsx" required />
+                <div class="file-info">
+                    <p>No File Selected</p>
+                </div>
+            </div>
+            <div class="dropzone-description">
+                <span>Max file size : 25MB</span>
+            </div>
+            <div class="dropzone-actions">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closeUploadExcelModal()">Close</button>
+                <button type="submit" id="uploadBtn" class="btn btn-primary btn-sm">
+                    <span id="uploadBtnText">Add Teacher</span>
+                    <span id="uploadLoader" class="spinner-border spinner-border-sm d-none"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this teacher?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteTeacherForm" method="post" asp-action="DeleteTeacher" onsubmit="return showLoader('delete')">
+                        <input type="hidden" id="deleteTeacherEmployeeNumber" name="TeacherEmployeeNumber" />
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="deleteBtn" class="btn btn-danger">
+                            <span id="deleteBtnText">Delete</span>
+                            <span id="deleteLoader" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script>
+        // 🔍 Search Teachers by Employee Number
+    function searchTable() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let table = document.getElementById("teacherTable");
+        let rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+            let cells = rows[i].getElementsByTagName("td");
+            let found = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].innerText.toLowerCase().includes(input)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            rows[i].style.display = found ? "" : "none";
+        }
+    }
+
+    // ✏ Edit Teacher
+    function editTeacher(teacher) {
+        console.log(teacher);
+        document.getElementById("editTeacherId").value = teacher.teacherId;
+        document.getElementById("editTeacherEmployeeNumber").value = teacher.teacherEmployeeNumber;
+        document.getElementById("editTeacherName").value = teacher.teacherName;
+        document.getElementById("editTeacherEmail").value = teacher.teacherEmail;
+        document.getElementById("editTeacherDesignation").value = teacher.teacherDesignation;
+        document.getElementById("editTeacherDepartment").value = teacher.teacherDepartment;
+
+        // Show the modal
+        let editModal = new bootstrap.Modal(document.getElementById('editTeacherModal'));
+        editModal.show();
+    }
+
+    // 🗑 Open Delete Confirmation Modal
+    function openDeleteModal(employeeNumber) {
+        document.getElementById("deleteTeacherEmployeeNumber").value = employeeNumber;
+
+        let deleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        deleteModal.show();
+    }
+
+    // 📂 Open Upload Excel Modal
+    function openUploadExcelModal() {
+        document.getElementById('uploadExcelModalOverlay').style.display = 'block';
+        document.getElementById('uploadExcelModal').style.display = 'flex';
+    }
+
+    // ❌ Close Upload Excel Modal
+    function closeUploadExcelModal() {
+        document.getElementById('uploadExcelModalOverlay').style.display = 'none';
+        document.getElementById('uploadExcelModal').style.display = 'none';
+
+        let fileInput = document.getElementById('upload-file');
+        if (fileInput) fileInput.value = "";
+
+        let fileInfo = document.querySelector('.file-info p');
+        if (fileInfo) fileInfo.textContent = "No File Selected";
+    }
+
+    // ⏳ Show Loader on Submit
+    function showLoader(action) {
+        let button, loader, buttonText;
+
+        if (action === 'add') {
+            button = document.getElementById("addBtn");
+            loader = document.getElementById("addLoader");
+            buttonText = document.getElementById("addBtnText");
+        } else if (action === 'edit') {
+            button = document.getElementById("editBtn");
+            loader = document.getElementById("editLoader");
+            buttonText = document.getElementById("editBtnText");
+        } else if (action === 'delete') {
+            button = document.getElementById("deleteBtn");
+            loader = document.getElementById("deleteLoader");
+            buttonText = document.getElementById("deleteBtnText");
+        } else if (action === 'uploadExcel') {
+            button = document.getElementById("uploadBtn");
+            loader = document.getElementById("uploadLoader");
+            buttonText = document.getElementById("uploadBtnText");
+        }
+
+        // Show Loader and Disable Button
+        loader.classList.remove("d-none");
+        buttonText.textContent = action === 'delete' ? "Deleting..."
+            : action === 'edit' ? "Updating..."
+            : action === 'uploadExcel' ? "Uploading..."
+            : "Adding...";
+        button.disabled = true;
+
+        return true; // Allow form submission
+    }
+</script>

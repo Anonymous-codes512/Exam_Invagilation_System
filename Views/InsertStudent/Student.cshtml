@@ -1,0 +1,442 @@
+﻿@model StudentPaginationViewModel
+
+@{
+    ViewData["title"] = "View Student Data";
+}
+
+<div class="container-fluid p-0">
+    <h2 class="text-center mb-4">Students Management</h2>
+    <!-- Button to Trigger the Modal -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addStudentModal">Add Student</button>
+            <button class="btn btn-primary ms-3" onclick="openUploadExcelModal()">Add Excel File</button>
+        </div>
+        <div class="me-3">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search By Registration Number..." style="width: 350px;" onkeyup="searchTable()">
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table" id="studentTable">
+                <thead>
+                    <tr>
+                        <th>Reg #</th>
+                        <th>Student Name</th>
+                        <th>Father Name</th>
+                        <th>Program</th>
+                        <th>Semester</th>
+                        <th>Section</th>
+                        <th>Attendance</th>
+                        <th>Dues Clear</th>
+                        <th>Courses Registered</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var student in Model.Students)
+                    {
+                        <tr>
+                            <td>@student.RegistrationNumber</td>
+                            <td>@student.StudentName</td>
+                            <td>@student.FatherName</td>
+                            <td>@student.Program</td>
+                            <td>@student.Semester<sup>th</sup></td>
+                            <td>@student.Section</td>
+                            <td>@student.Attendance%</td>
+                            <td>@(student.DuesClear ? "Clear" : "Not clear")</td>
+
+                            <td>
+                                @if (student.StudentCourses != null && student.StudentCourses.Any())
+                                {
+                                    @string.Join(", ", student.StudentCourses.Select(c => c.CourseCode))
+                                }
+                                else
+                                {
+                                    <span>No Courses</span>
+                                }
+                            </td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick='editStudent(@Html.Raw(Json.Serialize(student)))'>
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-danger btn-sm" onclick="openDeleteModal('@student.RegistrationNumber')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <!-- Pagination Links -->
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Student" asp-route-pageNumber="@(Model.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-action="Student" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                    </li>
+                }
+
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Student" asp-route-pageNumber="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                    </li>
+                }
+            </ul>
+
+        </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title" id="addStudentModalLabel">Add Student</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <form method="post" asp-action="AddStudent" class="form" id="addStudentForm" onsubmit="return showLoader('add')">
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <label for="registrationNumber" class="form-label mb-1">Registration Number</label>
+                                <input type="text" id="registrationNumber" placeholder="FA21-BSE-000" class="form-control form-control-sm" name="RegistrationNumber" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="studentName" class="form-label mb-1">Student Name</label>
+                                <input type="text" id="studentName" placeholder="Muhammad Ali" class="form-control form-control-sm" name="StudentName" required />
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-6">
+                                <label for="fatherName" class="form-label mb-1">Father Name</label>
+                                <input type="text" id="fatherName" placeholder="Ali Ahmad Khan" class="form-control form-control-sm" name="FatherName" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="program" class="form-label mb-1">Program</label>
+                                <select id="program" class="form-control form-control-sm" name="Program" required>
+                                    <option value="">Select Program</option>
+                                    <option value="Software Engineering">Software Engineering</option>
+                                    <option value="Computer Science">Computer Science</option>
+                                    <option value="Artificial Intelligence">Artificial Intelligence</option>
+                                    <option value="Electrical Engineering">Electrical Engineering</option>
+                                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                    <option value="Civil Engineering">Civil Engineering</option>
+                                    <option value="Business Administration">Business Administration</option>
+                                    <option value="Accounting and Finance">Accounting and Finance</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-6">
+                                <label for="semester" class="form-label mb-1">Semester</label>
+                                <select id="semester" class="form-control form-control-sm" name="Semester" required>
+                                    <option value="">Select Semester</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="section" class="form-label mb-1">Section</label>
+                                <input type="text" id="section" placeholder="e.g (A, B, C...)" class="form-control form-control-sm" name="Section" required />
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-6">
+                                <label for="attendance" class="form-label mb-1">Attendance in Percentage</label>
+                                <input type="number" id="attendance" placeholder="(e.g., 88, 90)" class="form-control form-control-sm" name="Attendance" title="Please enter a value(e.g., 88, 90)" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="duesClear" class="form-label mb-1">Dues Clear</label>
+                                <select id="duesClear" class="form-control form-control-sm" name="DuesClear" required>
+                                    <option value="">Select Status</option>
+                                    <option value="true">Yes</option>
+                                    <option value="false">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer py-2">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" id="addBtn" class="btn btn-primary btn-sm">
+                                <span id="addBtnText">Add Student</span>
+                                <span id="addLoader" class="spinner-border spinner-border-sm d-none"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Student Modal -->
+    <div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title" id="editStudentModalLabel">Edit Student</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <form method="post" asp-action="EditStudent" class="form" id="editStudentForm" onsubmit="return showLoader('edit')">
+                        <input type="hidden" id="editStudentId" name="StudentId" />
+
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <label for="editRegistrationNumber" class="form-label mb-1">Registration Number</label>
+                                <input type="text" id="editRegistrationNumber" placeholder="FA21-BSE-000" class="form-control form-control-sm" name="RegistrationNumber" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editStudentName" class="form-label mb-1">Student Name</label>
+                                <input type="text" id="editStudentName" class="form-control form-control-sm" name="StudentName" required />
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-6">
+                                <label for="editFatherName" class="form-label mb-1">Father Name</label>
+                                <input type="text" id="editFatherName" class="form-control form-control-sm" name="FatherName" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editProgram" class="form-label mb-1">Program</label>
+                                <select id="editProgram" class="form-control form-control-sm" name="Program" required>
+                                    <option value="Software Engineering">Software Engineering</option>
+                                    <option value="Computer Science">Computer Science</option>
+                                    <option value="Artificial Intelligence">Artificial Intelligence</option>
+                                    <option value="Electrical Engineering">Electrical Engineering</option>
+                                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                    <option value="Civil Engineering">Civil Engineering</option>
+                                    <option value="Business Administration">Business Administration</option>
+                                    <option value="Accounting and Finance">Accounting and Finance</option>
+                                </select>
+                                
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-6">
+                                <label for="editSemester" class="form-label mb-1">Semester</label>
+                                <select type="number" id="editSemester" class="form-control form-control-sm" name="Semester" required>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editSection" class="form-label mb-1">Section</label>
+                                <input type="text" id="editSection" class="form-control form-control-sm" name="Section" required />
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-6">
+                                <label for="editAttendance" class="form-label mb-1">Attendance</label>
+                                <input type="number" id="editAttendance" class="form-control form-control-sm" name="Attendance" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editDuesClear" class="form-label mb-1">Dues Clear</label>
+                                <select id="editDuesClear" class="form-control form-control-sm" name="DuesClear" required>
+                                    <option value="true">Yes</option>
+                                    <option value="false">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer py-2">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" id="editBtn" class="btn btn-primary btn-sm">
+                                <span id="editBtnText">Update Student</span>
+                                <span id="editLoader" class="spinner-border spinner-border-sm d-none"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Excel File Opener -->
+    <div id="uploadExcelModalOverlay"></div>
+    <div id="uploadExcelModal">
+        <form class="dropzone-box" enctype="multipart/form-data" method="post" asp-action="UploadExcel" onsubmit="return showLoader('addExcel')">
+            @Html.AntiForgeryToken()
+            <h2>Upload Excel File</h2>
+            <p>Click to upload or drag and drop</p>
+            <div class="dropzone-area">
+                <div class="file-upload-icon">
+                    <i class='bx bx-cloud-upload'></i>
+                </div>
+                <input type="file" id="upload-file" name="file" accept=".xls,.xlsx" required />
+                <div class="file-info">
+                    <p>No File Selected</p>
+                </div>
+            </div>
+            <div class="dropzone-description">
+                <span>Max file size : 25MB</span>
+            </div>
+            <div class="dropzone-actions">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closeUploadExcelModal()">Close</button>
+                <button type="submit" id="uploadBtn" class="btn btn-primary btn-sm">
+                    <span id="uploadBtnText">Add Student</span>
+                    <span id="uploadLoader" class="spinner-border spinner-border-sm d-none"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this student?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteStudentForm" method="post" asp-action="DeleteStudent" onsubmit="return showLoader('delete')">
+                        <input type="hidden" id="deleteRegistrationNumber" name="registrationNumber" />
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="deleteBtn" class="btn btn-danger">
+                            <span id="deleteBtnText">Delete</span>
+                            <span id="deleteLoader" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function openUploadExcelModal(){
+        document.getElementById('uploadExcelModalOverlay').style.display = 'block';
+        document.getElementById('uploadExcelModal').style.display = 'flex';
+    }
+
+    function closeUploadExcelModal() {
+        document.getElementById('uploadExcelModalOverlay').style.display = 'none';
+        document.getElementById('uploadExcelModal').style.display = 'none';
+
+        // Clear the selected file
+        let fileInput = document.getElementById('upload-file');
+        if (fileInput) {
+            fileInput.value = "";
+        }
+
+        // Reset the file info text
+        let fileInfo = document.querySelector('.file-info p');
+        if (fileInfo) {
+            fileInfo.textContent = "No File Selected";
+        }
+    }
+
+    function searchTable() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let table = document.getElementById("studentTable");
+        let rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+            let cells = rows[i].getElementsByTagName("td");
+            let found = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].innerText.toLowerCase().includes(input)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            rows[i].style.display = found ? "" : "none";
+        }
+    }
+
+    function editStudent(student) {
+        // Populate modal fields
+        document.getElementById("editStudentId").value = student.studentId;
+        document.getElementById("editRegistrationNumber").value = student.registrationNumber;
+        document.getElementById("editStudentName").value = student.studentName;
+        document.getElementById("editFatherName").value = student.fatherName;
+        document.getElementById("editProgram").value = student.program;
+        document.getElementById("editSemester").value = student.semester;
+        document.getElementById("editSection").value = student.section;
+        document.getElementById("editAttendance").value = student.attendance;
+        document.getElementById("editDuesClear").value = student.duesClear ? "true" : "false";
+
+        // Show the modal
+        var editModal = new bootstrap.Modal(document.getElementById('editStudentModal'));
+        editModal.show();
+    }
+
+    function openDeleteModal(registrationNumber) {
+        // Set the registration number in the hidden input field
+        document.getElementById("deleteRegistrationNumber").value = registrationNumber;
+
+        // Show the Bootstrap modal
+        var deleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        deleteModal.show();
+    }
+
+    function showLoader(action) {
+        let button, loader, buttonText;
+
+        if (action === 'add') {
+            button = document.getElementById("addBtn");
+            loader = document.getElementById("addLoader");
+            buttonText = document.getElementById("addBtnText");
+        } else if (action === 'edit') {
+            button = document.getElementById("editBtn");
+            loader = document.getElementById("editLoader");
+            buttonText = document.getElementById("editBtnText");
+        } else if (action === 'delete') {
+            button = document.getElementById("deleteBtn");
+            loader = document.getElementById("deleteLoader");
+            buttonText = document.getElementById("deleteBtnText");
+        } else if (action === 'addExcel') { // Fix for Excel Upload
+            button = document.getElementById("uploadBtn");
+            loader = document.getElementById("uploadLoader");
+            buttonText = document.getElementById("uploadBtnText");
+        }
+
+        // Show loader, change button text, and disable button
+        loader.classList.remove("d-none");
+        buttonText.textContent = action === 'delete' ? "Deleting..."
+            : action === 'edit' ? "Updating..."
+            : action === 'addExcel' ? "Uploading..."
+            : "Adding...";
+        button.disabled = true;
+
+        return true; // Allow form submission
+    }
+
+</script>

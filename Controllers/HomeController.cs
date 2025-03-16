@@ -1,32 +1,53 @@
-using System.Diagnostics;
-using Exam_Invagilation_System.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Exam_Invagilation_System.Models;
+using Exam_Invagilation_System.Entities;
+using System.Linq;
 
 namespace Exam_Invagilation_System.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly AppDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(AppDbContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Dashboard()
         {
-            return View();
-        }
+            // Fetch student attendance
+            var students = _context.Students.ToList();
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+            int studentsAppeared = students.Count(s => s.Attendance > 80);
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            int totalStudents = students.Count;
+            int notAppeared = totalStudents - studentsAppeared;
+
+            //Fetch Cheating Reports with Student Name &Teacher Name
+           var cheatingReports = _context.CheatingReports
+               .Include(cr => cr.Student)
+               .Include(cr => cr.Teacher)
+               .Select(cr => new
+               {
+                   cr.CheatingReportId,
+                   StudentName = cr.Student != null ? cr.Student.StudentName : "Unknown",
+                   TeacherName = cr.Teacher != null ? cr.Teacher.TeacherName : "Unknown",
+                   cr.RoomId,
+                   cr.CourseCode,
+                   cr.Date,
+                   cr.TimeSlot,
+                   cr.Description
+               })
+               .ToList();
+
+            ViewData["TotalStudents"] = totalStudents;
+            ViewData["StudentsAppeared"] = studentsAppeared;
+            ViewData["NotAppeared"] = notAppeared;
+            ViewData["CheatingReports"] = cheatingReports;
+
+            return View();
         }
     }
 }
