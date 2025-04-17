@@ -520,6 +520,7 @@ table {
     color: var(--grey-color) !important;
     border: 1px solid var(--grey-color-light);
     font-size: 0.75rem;
+    cursor:default !important;
 }
 
     table thead {
@@ -545,6 +546,7 @@ table td {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 145px;
+
 }
 table thead th:last-child{
     text-align:center !important;
@@ -789,4 +791,4 @@ table tbody td:last-child {
     100% {
         display: none;
     }
-}
+} 

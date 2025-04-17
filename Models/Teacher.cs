@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Exam_Invagilation_System.Models
 {
@@ -21,5 +22,9 @@ namespace Exam_Invagilation_System.Models
 
         [Required(ErrorMessage = "Teacher Department is required")]
         public required string TeacherDepartment { get; set; }
+
+        [JsonIgnore] // 👈 Prevents circular reference
+        public ICollection<Course> Courses { get; set; } = new List<Course>();
+        
     }
 }

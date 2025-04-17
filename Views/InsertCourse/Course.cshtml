@@ -1,0 +1,346 @@
+﻿@model CoursePaginationViewModel
+
+@{
+    ViewData["title"] = "Course Management";
+}
+
+<div class="container-fluid p-0">
+    <h2 class="text-center mb-4">Course Management</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addCourseModal">Add Course</button>
+            <button class="btn btn-primary ms-3" onclick="openUploadExcelModal()">Add Excel File</button>
+        </div>
+        <div class="me-3">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search by Course Code..." style="width: 350px;" onkeyup="searchTable()">
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table" id="CourseTable">
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course Name</th>
+                        <th>Pre Requisite</th>
+                        <th>Assigned Teacher</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var course in Model.Courses)
+                    {
+                        <tr>
+                            <td>@course.CourseCode</td>
+                            <td>@course.CourseName</td>
+                            <td>@course.PreRequisite</td>
+                            <td>@course.Teacher.TeacherName</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick='editCourse(@Html.Raw(Json.Serialize(course)))'>
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+
+
+                                <button type="button" class="btn btn-danger btn-sm" onclick="openDeleteModal('@course.CourseCode')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <!-- Pagination Links -->
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Course" asp-route-pageNumber="@(Model.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-action="Course" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                    </li>
+                }
+
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Course" asp-route-pageNumber="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <!-- Add Course Modal -->
+    <div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title" id="addCourseModalLabel">Add Course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <form method="post" asp-action="AddCourse" class="form" onsubmit="return showLoader('add')">
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <label for="CourseCode" class="form-label mb-1">Course Code</label>
+                                <input type="text" id="CourseCode" class="form-control form-control-sm" name="CourseCode" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="CourseName" class="form-label mb-1">Course Name</label>
+                                <input type="text" id="CourseName" class="form-control form-control-sm" name="CourseName" required />
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <!-- Pre Requisite Field -->
+                            <div class="col-md-6">
+                                <label for="PreRequisite" class="form-label mb-1">Pre Requisite</label>
+                                <input type="text" id="PreRequisite" class="form-control form-control-sm" name="PreRequisite" required>
+                            </div>
+
+                            <!-- Teacher Dropdown -->
+                            <div class="col-md-6">
+                                <label for="TeacherEmployeeNumber" class="form-label mb-1">Select Teacher</label>
+                                <select id="TeacherEmployeeNumber" class="form-select form-select-sm" asp-for="TeacherEmployeeNumber" required>
+                                    <option value="" disabled selected>Select a Teacher</option>
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        <option value="@teacher.TeacherEmployeeNumber">@teacher.TeacherName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer py-2">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" id="addBtn" class="btn btn-primary btn-sm">
+                                <span id="addBtnText">Add Course</span>
+                                <span id="addLoader" class="spinner-border spinner-border-sm d-none"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Edit Course Modal -->
+    <div class="modal fade" id="editCourseModal" tabindex="-1" aria-labelledby="editCourseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title" id="editRoomModalLabel">Edit Course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <form method="post" asp-action="EditCourse" class="form" onsubmit="return showLoader('edit')">
+                        <!-- Hidden field for Course ID -->
+                        <input type="hidden" id="editCourseId" name="CourseId" />
+
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <label for="editCourseCode" class="form-label mb-1">Course Code</label>
+                                <input type="text" id="editCourseCode" class="form-control form-control-sm" name="CourseCode" required readonly/>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editCourseName" class="form-label mb-1">Course Name</label>
+                                <input type="text" id="editCourseName" class="form-control form-control-sm" name="CourseName" required />
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-6">
+                                <label for="editPreRequisite" class="form-label mb-1">Pre Requisite</label>
+                                <input type="text" id="editPreRequisite" class="form-control form-control-sm" name="PreRequisite" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editTeacherEmployeeNumber" class="form-label mb-1">Select Teacher</label>
+                                <select id="editTeacherEmployeeNumber" class="form-select form-select-sm" asp-for="TeacherEmployeeNumber" required>
+                                    <option value="" disabled selected>Select a Teacher</option>
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        <option value="@teacher.TeacherEmployeeNumber">@teacher.TeacherName</option>
+                                    }
+                                </select>
+
+
+                            </div>
+                        </div>
+
+                        <div class="modal-footer py-2">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" id="editBtn" class="btn btn-primary btn-sm">
+                                <span id="editBtnText">Update Course</span>
+                                <span id="editLoader" class="spinner-border spinner-border-sm d-none"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Excel File Opener -->
+    <div id="uploadExcelModalOverlay"></div>
+    <div id="uploadExcelModal">
+        <form class="dropzone-box" enctype="multipart/form-data" method="post" asp-action="UploadCourseExcel" onsubmit="return showLoader('addExcel')">
+            @Html.AntiForgeryToken()
+            <h2>Upload Excel File</h2>
+            <p>Click to upload or drag and drop</p>
+            <div class="dropzone-area">
+                <div class="file-upload-icon">
+                    <i class='bx bx-cloud-upload'></i>
+                </div>
+                <input type="file" id="upload-file" name="file" accept=".xls,.xlsx" required />
+                <div class="file-info">
+                    <p>No File Selected</p>
+                </div>
+            </div>
+            <div class="dropzone-description">
+                <span>Max file size : 25MB</span>
+            </div>
+            <div class="dropzone-actions">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closeUploadExcelModal()">Close</button>
+                <button type="submit" id="uploadBtn" class="btn btn-primary btn-sm">
+                    <span id="uploadBtnText">Add Courses</span>
+                    <span id="uploadLoader" class="spinner-border spinner-border-sm d-none"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this course?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteCourseForm" method="post" asp-action="DeleteCourse" onsubmit="return showLoader('delete')">
+                        <input type="hidden" id="deleteCourseCode" name="CourseCode" />
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="deleteBtn" class="btn btn-danger">
+                            <span id="deleteBtnText">Delete</span>
+                            <span id="deleteLoader" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function openUploadExcelModal(){
+        document.getElementById('uploadExcelModalOverlay').style.display = 'block';
+        document.getElementById('uploadExcelModal').style.display = 'flex';
+    }
+
+    function closeUploadExcelModal() {
+        document.getElementById('uploadExcelModalOverlay').style.display = 'none';
+        document.getElementById('uploadExcelModal').style.display = 'none';
+
+        // Clear the selected file
+        let fileInput = document.getElementById('upload-file');
+        if (fileInput) {
+            fileInput.value = "";
+        }
+
+        // Reset the file info text
+        let fileInfo = document.querySelector('.file-info p');
+        if (fileInfo) {
+            fileInfo.textContent = "No File Selected";
+        }
+    }
+    function editCourse(course) {
+        console.log(course);
+        // Assigning values from the received object to the modal input fields
+        document.getElementById("editCourseId").value = course.courseId;
+        document.getElementById("editCourseCode").value = course.courseCode;
+        document.getElementById("editCourseName").value = course.courseName;
+        document.getElementById("editPreRequisite").value = course.preRequisite;
+        document.getElementById("editTeacherEmployeeNumber").value = course.teacherEmployeeNumber;
+
+        // Open the modal using Bootstrap's JavaScript API
+        var editModal = new bootstrap.Modal(document.getElementById('editCourseModal'));
+        editModal.show();
+    }
+
+
+
+    function openDeleteModal(CourseCode) {
+
+        document.getElementById("deleteCourseCode").value = CourseCode;
+        var deleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        deleteModal.show();
+    }
+
+    function searchTable() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let table = document.getElementById("CourseTable");
+        let rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+            let cells = rows[i].getElementsByTagName("td");
+            let found = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].innerText.toLowerCase().includes(input)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            rows[i].style.display = found ? "" : "none";
+        }
+    }
+
+    function showLoader(action) {
+        let button, loader, buttonText;
+
+        if (action === 'add') {
+            button = document.getElementById("addBtn");
+            loader = document.getElementById("addLoader");
+            buttonText = document.getElementById("addBtnText");
+        } else if (action === 'edit') {
+            button = document.getElementById("editBtn");
+            loader = document.getElementById("editLoader");
+            buttonText = document.getElementById("editBtnText");
+        } else if (action === 'delete') {
+            button = document.getElementById("deleteBtn");
+            loader = document.getElementById("deleteLoader");
+            buttonText = document.getElementById("deleteBtnText");
+        } else if (action === 'addExcel') { // Fix for Excel Upload
+            button = document.getElementById("uploadBtn");
+            loader = document.getElementById("uploadLoader");
+            buttonText = document.getElementById("uploadBtnText");
+        }
+
+        // Show loader, change button text, and disable button
+        loader.classList.remove("d-none");
+        buttonText.textContent = action === 'delete' ? "Deleting..."
+            : action === 'edit' ? "Updating..."
+            : action === 'addExcel' ? "Uploading..."
+            : "Adding...";
+        button.disabled = true;
+
+        return true; // Allow form submission
+    }
+
+</script>

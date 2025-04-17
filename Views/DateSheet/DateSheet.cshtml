@@ -1,0 +1,416 @@
+﻿@model DateSheetPaginationViewModel
+
+@{
+    ViewData["title"] = "DateSheet Management";
+}
+
+<div class="container-fluid p-0">
+    <h2 class="text-center mb-4">Date Sheet Management</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addDateSheetModel">Add DateSheet</button>
+            <button class="btn btn-primary ms-3" onclick="openUploadExcelModal()">Add Excel File</button>
+        </div>
+        <div class="me-3">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search by Course Code..." style="width: 350px;" onkeyup="searchTable()">
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table" id="DateSheetTable">
+                <thead>
+                    <tr>
+                        <th>Sr #</th>
+                        <th>Course Code</th>
+                        <th>Course Name</th>
+                        <th>Room Number</th>
+                        <th>Location</th>
+                        <th>Exam Term</th>
+                        <th>Date</th>
+                        <th>Time Slot</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var dateSheet in Model.DateSheets.Select((value, index) => new { value, index }))
+                    {
+                         <tr>
+                             <td>@(dateSheet.index + 1)</td>
+                             <td>@dateSheet.value.CourseCode</td>
+                             <td>@dateSheet.value.Course.CourseName</td>
+                             <td>@dateSheet.value.Room.RoomNumber</td>
+                             <td>@dateSheet.value.Room.Location</td>
+                             <td>@dateSheet.value.ExamTerm</td>
+                            <td>@dateSheet.value.Date</td>
+                             <td>@dateSheet.value.TimeSlot</td>
+                             <td>
+                                <button class="btn btn-warning btn-sm" onclick='editDateSheet(@Html.Raw(Json.Serialize(dateSheet)))'>
+                                     <i class="bi bi-pencil-square"></i>
+                                 </button>
+                                 <button type="button" class="btn btn-danger btn-sm" onclick="openDeleteModal('@dateSheet.value.PaperId')">
+                                     <i class="bi bi-trash"></i>
+                                 </button>
+                             </td>
+                         </tr>
+                     }
+                </tbody>
+            </table>
+
+            <!-- Pagination Links -->
+             <ul class="pagination justify-content-center">
+                 @if (Model.CurrentPage > 1)
+                 {
+                     <li class="page-item">
+                        <a class="page-link" asp-action="DateSheet" asp-route-pageNumber="@(Model.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                     </li>
+                 }
+
+                 @for (int i = 1; i <= Model.TotalPages; i++)
+                 {
+                     <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-action="DateSheet" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                     </li>
+                 }
+
+                 @if (Model.CurrentPage < Model.TotalPages)
+                 {
+                     <li class="page-item">
+                        <a class="page-link" asp-action="DateSheet" asp-route-pageNumber="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                     </li>
+                 }
+             </ul>
+        </div>
+    </div>
+
+     <!-- Add Course Modal -->
+    <div class="modal fade" id="addDateSheetModel" tabindex="-1" aria-labelledby="addDateSheetModelLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title" id="addDateSheetModelLabel">Add Date Sheet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <form method="post" asp-action="AddDateSheet" class="form" onsubmit="return showLoader('add')">
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <label for="CourseCode" class="form-label mb-1">Select Course</label>
+                                <select id="CourseCode" class="form-select form-select-sm" name="CourseCode" required>
+                                    <option value="" disabled selected>Select a Course</option>
+                                    @foreach (var course in Model.Courses)
+                                    {
+                                        <option value="@course.CourseCode">@course.CourseName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="RoomNumber" class="form-label mb-1">Select Room</label>
+                                <select id="RoomNumber" class="form-select form-select-sm" name="RoomId" required>
+                                    <option value="" disabled selected>Select a Room</option>
+                                    @foreach (var room in Model.Rooms)
+                                    {
+                                        <option value="@room.RoomId">@room.RoomNumber</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <!-- Paper Date Picker -->
+                            <div class="col-md-6">
+                                <label for="paperDate" class="form-label mb-1">Select Paper Date</label>
+                                <input type="date" id="paperDate" class="form-control form-control-sm" name="Date" required min="{{ DateTime.Now.ToString(" yyyy-MM-dd") }}">
+                            </div>
+
+                            <!-- Time Slot Picker -->
+                            <div class="col-md-6">
+                                <label for="examTerm" class="form-label mb-1">Select Exam Term</label>
+                                <select id="examTerm" class="form-select form-select-sm" name="ExamTerm" required>
+                                    <option value="" disabled selected>Select Exam Term</option>
+                                    <option value="Midterm">Mid Term</option>
+                                    <option value="Finalterm">Final Term</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-6">
+                                <label for="StartTime" class="form-label mb-1">Select Start Time</label>
+                                <input type="time" id="StartTime" class="form-control form-control-sm" name="StartTime" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="EndTime" class="form-label mb-1">Select End Time</label>
+                                <input type="time" id="EndTime" class="form-control form-control-sm" name="EndTime" required>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer py-2">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" id="addBtn" class="btn btn-primary btn-sm">
+                                <span id="addBtnText">Add DateSheet</span>
+                                <span id="addLoader" class="spinner-border spinner-border-sm d-none"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+     <!-- Edit Course Modal -->
+     <div class="modal fade" id="editDateSheetModal" tabindex="-1" aria-labelledby="editDateSheetModalLabel" aria-hidden="true"> 
+         <div class="modal-dialog modal-lg"> 
+             <div class="modal-content"> 
+                 <div class="modal-header py-2">
+                     <h5 class="modal-title" id="editRoomModalLabel">Edit Course</h5>
+                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> 
+                 </div> 
+                 <div class="modal-body p-3">
+                    <form method="post" asp-action="EditDateSheet" class="form" onsubmit="return showLoader('edit')">
+                        <div class="row g-2">
+                            <input type="hidden" id="editPaperId" name="PaperId" />
+
+                            <div class="col-md-6">
+                                <label for="editCourseCode" class="form-label mb-1">Select Course</label>
+                                <select id="editCourseCode" class="form-select form-select-sm" name="CourseCode" required>
+                                    <option value="" disabled selected>Select a Course</option>
+                                    @foreach (var course in Model.Courses)
+                                    {
+                                        <option value="@course.CourseCode">@course.CourseName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editRoomNumber" class="form-label mb-1">Select Room</label>
+                                <select id="editRoomNumber" class="form-select form-select-sm" name="RoomId" required>
+                                    <option value="" disabled selected>Select a Room</option>
+                                    @foreach (var room in Model.Rooms)
+                                    {
+                                        <option value="@room.RoomId">@room.RoomNumber</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <!-- Paper Date Picker -->
+                            <div class="col-md-6">
+                                <label for="editPaperDate" class="form-label mb-1">Select Paper Date</label>
+                                <input type="date" id="editPaperDate" class="form-control form-control-sm" name="Date" required>
+                            </div>
+
+                            <!-- Time Slot Picker -->
+                            <div class="col-md-6">
+                                <label for="editTimeSlot" class="form-label mb-1">Select Time Slot</label>
+                                <input type="time" id="editTimeSlot" class="form-control form-control-sm" name="TimeSlot" required>
+                            </div>
+                        </div>
+
+                        <div class="row g-1 mt-2">
+                            <div class="col-12">
+                                <label for="editExamTerm" class="form-label mb-1">Select Exam Term</label>
+                                <select id="editExamTerm" class="form-select form-select-sm" name="ExamTerm" required>
+                                    <option value="" disabled selected>Select Exam Term</option>
+                                    <option value="Midterm">Mid Term</option>
+                                    <option value="Finalterm">Final Term</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer py-2">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" id="editBtn" class="btn btn-primary btn-sm">
+                                <span id="editBtnText">Update DateSheet</span>
+                                <span id="editLoader" class="spinner-border spinner-border-sm d-none"></span>
+                            </button>
+                        </div>
+                    </form>
+                 </div>
+             </div> 
+         </div> 
+     </div> 
+
+    <!-- Excel File Opener -->
+    <div id="uploadExcelModalOverlay"></div>
+    <div id="uploadExcelModal">
+        <form class="dropzone-box" enctype="multipart/form-data" method="post" asp-action="UploadDateSheetExcel" onsubmit="return showLoader('addExcel')">
+            @Html.AntiForgeryToken()
+            <h2>Upload Excel File</h2>
+            <p>Click to upload or drag and drop</p>
+            <div class="dropzone-area">
+                <div class="file-upload-icon">
+                    <i class='bx bx-cloud-upload'></i>
+                </div>
+                <input type="file" id="upload-file" name="file" accept=".xls,.xlsx" required />
+                <div class="file-info">
+                    <p>No File Selected</p>
+                </div>
+            </div>
+            <div class="dropzone-description">
+                <span>Max file size : 25MB</span>
+            </div>
+            <div class="dropzone-actions">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closeUploadExcelModal()">Close</button>
+                <button type="submit" id="uploadBtn" class="btn btn-primary btn-sm">
+                    <span id="uploadBtnText">Add DateSheet</span>
+                    <span id="uploadLoader" class="spinner-border spinner-border-sm d-none"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this DateSheet?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteCourseForm" method="post" asp-action="DeleteDateSheet" onsubmit="return showLoader('delete')">
+                        <input type="hidden" id="deleteDateSheet" name="PaperId" />
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="deleteBtn" class="btn btn-danger">
+                            <span id="deleteBtnText">Delete</span>
+                            <span id="deleteLoader" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    document.getElementById("addDateSheetForm").onsubmit = function(event) {
+        // Get StartTime and EndTime values
+        var startTime = document.getElementById("StartTime").value;
+        var endTime = document.getElementById("EndTime").value;
+
+        // Check if the StartTime and EndTime are valid
+        if (startTime && endTime) {
+            var start = new Date('1970-01-01T' + startTime + 'Z');
+            var end = new Date('1970-01-01T' + endTime + 'Z');
+
+            // Check if the difference between StartTime and EndTime is at least 2 hours
+            var timeDiff = (end - start) / (1000 * 60 * 60); // Difference in hours
+
+            if (timeDiff < 2) {
+                alert("End time must be at least 2 hours after start time.");
+                event.preventDefault(); // Prevent form submission
+            }
+        }
+    };
+
+    function openUploadExcelModal(){
+        document.getElementById('uploadExcelModalOverlay').style.display = 'block';
+        document.getElementById('uploadExcelModal').style.display = 'flex';
+    }
+
+    function closeUploadExcelModal() {
+        document.getElementById('uploadExcelModalOverlay').style.display = 'none';
+        document.getElementById('uploadExcelModal').style.display = 'none';
+
+        // Clear the selected file
+        let fileInput = document.getElementById('upload-file');
+        if (fileInput) {
+            fileInput.value = "";
+        }
+
+        // Reset the file info text
+        let fileInfo = document.querySelector('.file-info p');
+        if (fileInfo) {
+            fileInfo.textContent = "No File Selected";
+        }
+    }
+
+    function editDateSheet(dateSheet) {
+        console.log(dateSheet);
+
+        // Assigning values from the received dateSheet object to the modal input fields
+        document.getElementById("editPaperId").value = dateSheet.value.paperId; // Set the PaperId
+        document.getElementById("editCourseCode").value = dateSheet.value.courseCode; // Assuming dateSheet has courseCode
+        document.getElementById("editRoomNumber").value = dateSheet.value.roomId; // Assuming dateSheet has roomId
+        document.getElementById("editPaperDate").value = dateSheet.value.date; // Assuming dateSheet has date (in format yyyy-mm-dd)
+
+        // Handle the time slot: Extract the start time (e.g., "09:00" from "09:00-11:00")
+        var timeSlotStart = dateSheet.value.timeSlot.split('-')[0]; // Get the start time (e.g., "09:00")
+        document.getElementById("editTimeSlot").value = timeSlotStart; // Set the start time in the time input
+
+        console.log(dateSheet.value.examTerm);
+        document.getElementById("editExamTerm").value = dateSheet.value.examTerm; // Assuming dateSheet has examTerm
+
+        // Open the modal using Bootstrap's JavaScript API
+        var editModal = new bootstrap.Modal(document.getElementById('editDateSheetModal'));
+        editModal.show();
+    }
+
+    function openDeleteModal(PaperId) {
+        document.getElementById("deleteDateSheet").value = PaperId;
+        var deleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        deleteModal.show();
+    }
+
+    function searchTable() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let table = document.getElementById("DateSheetTable");
+        let rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+            let cells = rows[i].getElementsByTagName("td");
+            let found = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].innerText.toLowerCase().includes(input)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            rows[i].style.display = found ? "" : "none";
+        }
+    }
+
+    function showLoader(action) {
+        let button, loader, buttonText;
+
+        if (action === 'add') {
+            button = document.getElementById("addBtn");
+            loader = document.getElementById("addLoader");
+            buttonText = document.getElementById("addBtnText");
+        } else if (action === 'edit') {
+            button = document.getElementById("editBtn");
+            loader = document.getElementById("editLoader");
+            buttonText = document.getElementById("editBtnText");
+        } else if (action === 'delete') {
+            button = document.getElementById("deleteBtn");
+            loader = document.getElementById("deleteLoader");
+            buttonText = document.getElementById("deleteBtnText");
+        } else if (action === 'addExcel') { // Fix for Excel Upload
+            button = document.getElementById("uploadBtn");
+            loader = document.getElementById("uploadLoader");
+            buttonText = document.getElementById("uploadBtnText");
+        }
+
+        // Show loader, change button text, and disable button
+        loader.classList.remove("d-none");
+        buttonText.textContent = action === 'delete' ? "Deleting..."
+            : action === 'edit' ? "Updating..."
+            : action === 'addExcel' ? "Uploading..."
+            : "Adding...";
+        button.disabled = true;
+
+        return true; // Allow form submission
+    }
+
+</script>

@@ -6,12 +6,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddControllers();
 
 // Configure the database context
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFlutterApp",
+        builder => builder
+            .AllowAnyOrigin() // Later: use specific IP or domain
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
 
 var app = builder.Build();
 
@@ -30,14 +38,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseCors("AllowFlutterApp");
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseDeveloperExceptionPage();
-
 app.UseRouting();
-
 app.UseAuthorization();
 
+app.MapControllers();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Auth}/{action=Login}/{id?}");

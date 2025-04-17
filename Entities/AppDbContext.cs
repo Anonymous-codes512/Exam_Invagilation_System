@@ -16,69 +16,107 @@ namespace Exam_Invagilation_System.Entities
         public DbSet<Room> Rooms { get; set; }
 
         //public DbSet<Attendance> Attendances { get; set; }
-        //public DbSet<Duty> Duties { get; set; }
-        //public DbSet<Paper> Papers { get; set; }
+        public DbSet<Duty> Duties { get; set; }
+        public DbSet<Paper> Papers { get; set; }
         //public DbSet<SittingArrangement> SittingArrangements { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Define primary keys
+            // ✅ Define Student Primary Key
             modelBuilder.Entity<Student>().HasKey(s => s.StudentId);
-            // Define RegistrationNumber as an alternate key
+
+            // ✅ Define RegistrationNumber as an Alternate Key (Ensures uniqueness)
             modelBuilder.Entity<Student>().HasAlternateKey(s => s.RegistrationNumber);
-            // Ensure RegistrationNumber is unique
             modelBuilder.Entity<Student>().HasIndex(s => s.RegistrationNumber).IsUnique();
 
+            // ✅ Define Teacher Primary Key
+            modelBuilder.Entity<Teacher>().HasKey(t => t.TeacherId);
+            modelBuilder.Entity<Teacher>().HasAlternateKey(t => t.TeacherEmployeeNumber);
+            modelBuilder.Entity<Teacher>().HasIndex(t => t.TeacherEmployeeNumber).IsUnique();
+
+            // ✅ Define Course Primary Key
+            modelBuilder.Entity<Course>().HasKey(c => c.CourseId);
+            modelBuilder.Entity<Course>().HasIndex(c => c.CourseCode).IsUnique(); // Unique Course Code
+
+            // ✅ One Teacher Teaches Many Courses
             modelBuilder.Entity<Course>()
-        .HasKey(c => c.CourseId);  // Primary Key
+                .HasOne(c => c.Teacher)
+                .WithMany(t => t.Courses) // One teacher teaches multiple courses
+                .HasForeignKey(c => c.TeacherEmployeeNumber) // FK in Course
+                .HasPrincipalKey(t => t.TeacherEmployeeNumber)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent accidental deletion
 
-            modelBuilder.Entity<Course>()
-                .HasIndex(c => c.CourseCode)
-                .IsUnique();  // Secondary Unique Key
-
-            modelBuilder.Entity<StudentCourse>()
-                .HasOne(sc => sc.Course)
-                .WithMany(c => c.StudentCourses)
-                .HasForeignKey(sc => sc.CourseCode)
-                .HasPrincipalKey(c => c.CourseCode);
-
-
-            //Define StudentCourse composite key
+            // ✅ Define StudentCourse Composite Key (Many-to-Many: Student - Course)
             modelBuilder.Entity<StudentCourse>()
                 .HasKey(sc => new { sc.RegistrationNumber, sc.CourseCode });
-            // Student - StudentCourse relationship
+
+            // ✅ StudentCourse - Student Relationship
             modelBuilder.Entity<StudentCourse>()
                 .HasOne(sc => sc.Student)
                 .WithMany(s => s.StudentCourses)
-                .HasPrincipalKey(s => s.RegistrationNumber) 
-                .HasForeignKey(sc => sc.RegistrationNumber);
+                .HasPrincipalKey(s => s.RegistrationNumber)
+                .HasForeignKey(sc => sc.RegistrationNumber)
+                .OnDelete(DeleteBehavior.Cascade); // If a student is deleted, remove enrollments
 
-            // Course - StudentCourse relationship
+            // ✅ StudentCourse - Course Relationship
             modelBuilder.Entity<StudentCourse>()
                 .HasOne(sc => sc.Course)
                 .WithMany(c => c.StudentCourses)
-                .HasForeignKey(sc => sc.CourseCode);
+                .HasPrincipalKey(c => c.CourseCode)
+                .HasForeignKey(sc => sc.CourseCode)
+                .OnDelete(DeleteBehavior.Cascade); // If a course is deleted, remove enrollments
 
-            // ✅ Fixed: Student - CheatingReport relationship (Using RegistrationNumber as FK)
-            modelBuilder.Entity<CheatingReport>().HasOne(cr => cr.Student).WithMany().HasPrincipalKey(s => s.RegistrationNumber).HasForeignKey(cr => cr.RegistrationNumber);
-
-            modelBuilder.Entity<Teacher>().HasKey(t => t.TeacherId);
-
-            // Define TeacherEmployeeNumber as an alternate key
-            modelBuilder.Entity<Teacher>().HasAlternateKey(t => t.TeacherEmployeeNumber);
-
-            // Ensure TeacherEmployeeNumber is unique
-            modelBuilder.Entity<Teacher>().HasIndex(t => t.TeacherEmployeeNumber).IsUnique();
-
-            // ✅ Fixed: Teacher - CheatingReport relationship (Using TeacherEmployeeNumber as FK)
-            modelBuilder.Entity<CheatingReport>().HasOne(cr => cr.Teacher).WithMany().HasPrincipalKey(t => t.TeacherEmployeeNumber).HasForeignKey(cr => cr.TeacherEmployeeNumber);
-
+            // ✅ Define Room Primary Key
             modelBuilder.Entity<Room>().HasKey(r => r.RoomId);
-            // Define RoomNumber as an alternate key
             modelBuilder.Entity<Room>().HasAlternateKey(r => r.RoomNumber);
-            // Ensure RoomNumber is unique
             modelBuilder.Entity<Room>().HasIndex(r => r.RoomNumber).IsUnique();
 
+            // ✅ Define CheatingReport - Student Relationship (Using RegistrationNumber as FK)
+            modelBuilder.Entity<CheatingReport>()
+                .HasOne(cr => cr.Student)
+                .WithMany()
+                .HasPrincipalKey(s => s.RegistrationNumber)
+                .HasForeignKey(cr => cr.RegistrationNumber)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ✅ Define CheatingReport - Teacher Relationship (Using TeacherEmployeeNumber as FK)
+            modelBuilder.Entity<CheatingReport>()
+                .HasOne(cr => cr.Teacher)
+                .WithMany()
+                .HasPrincipalKey(t => t.TeacherEmployeeNumber)
+                .HasForeignKey(cr => cr.TeacherEmployeeNumber)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Paper>().HasKey(p => p.PaperId);
+            // ✅ Define Paper - Course Relationship
+            modelBuilder.Entity<Paper>()
+                .HasOne(p => p.Course)
+                .WithMany()
+                .HasForeignKey(p => p.CourseCode)
+                .HasPrincipalKey(c => c.CourseCode)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            // ✅ Define Paper - Room Relationship (Using RoomId as FK)
+            modelBuilder.Entity<Paper>()
+                .HasOne(p => p.Room)
+                .WithMany()
+                .HasForeignKey(p => p.RoomId)
+                .HasPrincipalKey(r => r.RoomId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Duty>().HasKey(d => d.DutyId);
+            modelBuilder.Entity<Duty>()
+                .HasOne(d => d.Teacher)
+                .WithMany()
+                .HasForeignKey(d => d.TeacherId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<Duty>()
+                .HasOne(d => d.Room)
+                .WithMany()
+                .HasForeignKey(d => d.RoomId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

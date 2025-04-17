@@ -1,0 +1,246 @@
+﻿@model StudentCoursePaginationViewModel
+
+@{
+    ViewData["title"] = "Register Course";
+}
+
+<div class="container-fluid p-0">
+    <h2 class="text-center mb-4">Course Registration Management</h2>
+
+    <!-- Buttons for Actions -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <button class="btn btn-primary ms-3" type='button' onclick="openUploadExcelModal()">Add Excel File</button>
+        </div>
+        <div class="me-3">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search By Registration Number..." style="width: 350px;" onkeyup="searchTable()">
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table" id="courseRegisterationTable">
+                <thead>
+                    <tr>
+                        <th class ="text-center">Student Reg #</th>
+                        <th class="text-center">Student Name</th>
+                        <th class="text-center">Courses Code</th>
+                        <th>Courses Name</th>
+                        <th>Teacher Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var studentCourse in Model.StudentCourses)
+                    {
+                        <tr>
+                            <!-- Student Registration Number and Name -->
+                            <td class="align-middle text-center fw-bold">@studentCourse.RegistrationNumber</td>
+                            <td class="align-middle text-center">@studentCourse.StudentName</td>
+
+                            <!-- Courses Codes -->
+                            <td class="align-middle text-center">
+                                @foreach (var course in studentCourse.Courses)
+                                {
+                                    <p style="margin : 1.3rem 0"> @course.CourseCode</p>
+                                }
+                            </td>
+
+                            <!-- Courses Names -->
+                            <td class="align-middle">
+                                @foreach (var course in studentCourse.Courses)
+                                {
+                                    <p style="margin : 1.3rem 0">@course.CourseName</p>
+                                }
+                            </td>
+                            <td class="align-middle">
+                                @foreach (var course in studentCourse.Courses)
+                                {
+                                    <p style="margin : 1.3rem 0">@course.TeacherName</p>
+                                }
+                            </td>
+
+                            <!-- Action Buttons for Each Course -->
+                            <td class="align-middle">
+                                @foreach (var course in studentCourse.Courses)
+                                {
+                                    <!-- Delete Button -->
+                                    <button type="button" class="btn btn-danger btn-sm my-1" title="Delete" onclick="openDeleteModal('@studentCourse.RegistrationNumber', '@course.CourseCode')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                    <br />
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+
+            </table>
+
+            <!-- Pagination -->
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="StudentCourses" asp-route-pageNumber="@(Model.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-action="StudentCourses" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                    </li>
+                }
+
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="StudentCourses" asp-route-pageNumber="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <!-- Excel File Opener -->
+    <div id="uploadExcelModalOverlay"></div>
+    <div id="uploadExcelModal">
+    <form class="dropzone-box" enctype="multipart/form-data" method="post" asp-action="UploadStudentCoursesExcel" asp-controller="CourseRegister" onsubmit="return showLoader('addExcel')">   
+        @Html.AntiForgeryToken()
+            <h2>Upload Excel File</h2>
+            <p>Click to upload or drag and drop</p>
+            <div class="dropzone-area">
+                <div class="file-upload-icon">
+                    <i class='bx bx-cloud-upload'></i>
+                </div>
+                <input type="file" id="upload-file" name="file" accept=".xls,.xlsx" required />
+                <div class="file-info">
+                    <p>No File Selected</p>
+                </div>
+            </div>
+            <div class="dropzone-description">
+                <span>Max file size : 25MB</span>
+            </div>
+            <div class="dropzone-actions">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closeUploadExcelModal()">Close</button>
+                <button type="submit" id="uploadBtn" class="btn btn-primary btn-sm">
+                    <span id="uploadBtnText">Add Students Courses</span>
+                    <span id="uploadLoader" class="spinner-border spinner-border-sm d-none"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this Student Course?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteStudentCourseForm" method="post" asp-action="DeleteStudentCourse" onsubmit="return showLoader('delete')">
+                        <input type="hidden" id="registrationNumber" name="RegistrationNumber" />
+                        <input type="hidden" id="courseCode" name="CourseCode" />
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="deleteBtn" class="btn btn-danger">
+                            <span id="deleteBtnText">Delete</span>
+                            <span id="deleteLoader" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script>
+    function searchTable() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let table = document.getElementById("courseRegisterationTable");
+        let rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+            let cells = rows[i].getElementsByTagName("td");
+            let found = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].innerText.toLowerCase().includes(input)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            rows[i].style.display = found ? "" : "none";
+        }
+    }
+
+    function openDeleteModal(registrationNumber, courseCode) {
+        console.log(registrationNumber);
+        console.log(courseCode);
+        document.getElementById("registrationNumber").value = registrationNumber;
+        document.getElementById("courseCode").value = courseCode;
+
+        let deleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        deleteModal.show();
+    }
+
+    // 📂 Open Upload Excel Modal
+    function openUploadExcelModal() {
+        document.getElementById('uploadExcelModalOverlay').style.display = 'block';
+        document.getElementById('uploadExcelModal').style.display = 'flex';
+    }
+
+    // ❌ Close Upload Excel Modal
+    function closeUploadExcelModal() {
+        document.getElementById('uploadExcelModalOverlay').style.display = 'none';
+        document.getElementById('uploadExcelModal').style.display = 'none';
+
+        let fileInput = document.getElementById('upload-file');
+        if (fileInput) fileInput.value = "";
+
+        let fileInfo = document.querySelector('.file-info p');
+        if (fileInfo) fileInfo.textContent = "No File Selected";
+    }
+
+    // ⏳ Show Loader on Submit
+    function showLoader(action) {
+        let button, loader, buttonText;
+
+        if (action === 'add') {
+            button = document.getElementById("addBtn");
+            loader = document.getElementById("addLoader");
+            buttonText = document.getElementById("addBtnText");
+        } else if (action === 'edit') {
+            button = document.getElementById("editBtn");
+            loader = document.getElementById("editLoader");
+            buttonText = document.getElementById("editBtnText");
+        } else if (action === 'delete') {
+            button = document.getElementById("deleteBtn");
+            loader = document.getElementById("deleteLoader");
+            buttonText = document.getElementById("deleteBtnText");
+        } else if (action === 'addExcel') {
+            button = document.getElementById("uploadBtn");
+            loader = document.getElementById("uploadLoader");
+            buttonText = document.getElementById("uploadBtnText");
+        }
+
+        // Show Loader and Disable Button
+        loader.classList.remove("d-none");
+        buttonText.textContent = action === 'delete' ? "Deleting..."
+            : action === 'edit' ? "Updating..."
+            : action === 'uploadExcel' ? "Uploading..."
+            : "Adding...";
+        button.disabled = true;
+
+        return true; // Allow form submission
+    }
+
+</script>

@@ -1,145 +1,160 @@
-﻿@{
-	ViewData["title"] = "Teacher Duty";
+﻿@model TeacherDutyPaginationViewModel
+
+@{
+    ViewData["title"] = "Generate Duty Schedules";
 }
+
 <div class="container-fluid p-0">
-	<h2 class="text-center mb-4">Teacher Duty Management</h2>
-	@* <form method="get" action="@Url.Action("Index")"> *@
-	@*     <div class="mb-3"> *@
-	@*         <input class="form-control" name="search" type="text" placeholder="Search for Teacher..." value="@Model.SearchQuery" /> *@
-	@*     </div> *@
-	@* </form> *@
+    <h2 class="text-center mb-4">Generate Teachers Duties</h2>
 
-	<!-- Button to Trigger the Modal -->
-	<button class="btn btn-success mb-3 ms-3" data-bs-toggle="modal" data-bs-target="#assignDutyModal" onclick="assignDuty()">Assign New Duty</button>
+    <!-- Buttons for Actions -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <form action="@Url.Action("GenerateTeacherDuties", "TeacherDuty")" method="post" onsubmit="showLoader()">
+                <button type="submit" id="generateDutyBtn" class="btn btn-primary ms-3">
+                    <span id="buttonText">Generate Teacher Duty</span>
+                    <span id="loader" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                </button>
+            </form>
+        </div>
 
+        <div class="me-3">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search By Employee Number..." style="width: 350px;" onkeyup="searchTable()">
+        </div>
+    </div>
 
-	<div class="card-body">
-		<div class="table-responsive">
-			<table class="table table-striped table-bordered table-hover">
-				<thead style="background-color:#3498db;" class="text-white">
-					<tr>
-						<th>Teacher Name</th>
-						<th>Dept</th>
-						<th>Date</th>
-						<th>Time</th>
-						<th>Room No</th>
-						<th>Block Name</th>
-						<th>Other Invigilator</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>John Doe</td>
-						<td>CS</td>
-						<td>01-06-2025</td>
-						<td>13:15</td>
-						<td>404</td>
-						<td>CS Block</td>
-						<td>John Doe, Jane Smith</td>
-					</tr>
-					<tr>
-						<td>Jane Smith</td>
-						<td>ECE</td>
-						<td>01-08-2025</td>
-						<td>10:15</td>
-						<td>306</td>
-						<td>Management Block</td>
-						<td>Omer Chughtai, Jane Smith</td>
-					</tr>
-					<tr>
-						<td>Omer Chughtai</td>
-						<td>CS</td>
-						<td>01-09-2025</td>
-						<td>15:00</td>
-						<td>505</td>
-						<td>CS Block</td>
-						<td>Omer Chughtai, John Doe</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table" id="teacherTable">
+                <thead>
+                    <tr>
+                        <th>Paper</th>
+                        <th>Teacher Name</th>
+                        <th>Dept</th>
+                        <th>Date</th>
+                        <th>TimeSlot</th>
+                        <th>Room#</th>
+                        <th>Other Invigilators</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var duty in Model.TeacherDuties)
+                    {
+                        var otherInvigilators = Model.TeacherDuties
+                        .Where(d => d.PaperId == duty.PaperId && d.RoomId == duty.RoomId && d.TeacherId != duty.TeacherId)
+                        .Select(d => d.Teacher.TeacherName)
+                        .ToList();
 
-		<!-- Modal -->
-		<div class="modal fade" id="assignDutyModal" tabindex="-1" aria-labelledby="assignDutyModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<div class="modal-header py-2">
-						<h5 class="modal-title" id="assignDutyModalLabel">Assign Duty</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body p-3">
-						<form id="assignDutyForm">
-							<div class="row g-2">
-								<div class="col-md-6">
-									<label for="teacherName" class="form-label mb-1">Teacher Name</label>
-									<input type="text" id="teacherName" class="form-control form-control-sm" />
-								</div>
-								<div class="col-md-6">
-									<label for="department" class="form-label mb-1">Department</label>
-									<input type="text" id="department" class="form-control form-control-sm" />
-								</div>
-							</div>
-							<div class="row g-2 mt-2">
-								<div class="col-md-6">
-									<label for="date" class="form-label mb-1">Date</label>
-									<input type="date" id="date" class="form-control form-control-sm" />
-								</div>
-								<div class="col-md-6">
-									<label for="time" class="form-label mb-1">Time</label>
-									<input type="time" id="time" class="form-control form-control-sm" />
-								</div>
-							</div>
-							<div class="row g-2 mt-2">
-								<div class="col-md-6">
-									<label for="roomNo" class="form-label mb-1">Room Number</label>
-									<input type="text" id="roomNo" class="form-control form-control-sm" />
-								</div>
-								<div class="col-md-6">
-									<label for="blockName" class="form-label mb-1">Block Name</label>
-									<input type="text" id="blockName" class="form-control form-control-sm" />
-								</div>
-							</div>
-							<div class="row g-2 mt-2">
-								<div class="col-md-12">
-									<label for="otherInvigilators" class="form-label mb-1">Other Invigilators</label>
-									<input type="text" id="otherInvigilators" class="form-control form-control-sm" />
-								</div>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer py-2">
-						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary btn-sm" onclick="assignDuty()">Save Duty</button>
-					</div>
-				</div>
-			</div>
-		</div>
+                        <tr>
+                            <td>@duty.Paper.Course.CourseName</td>
+                            <td>@duty.Teacher.TeacherName</td>
+                            <td>@duty.Teacher.TeacherDepartment</td>
+                            <td>@duty.Date.ToString("d MMMM yyyy")</td>
+                            <td>@duty.TimeSlot</td>
+                            <td>@duty.Room.RoomNumber</td>
+                            <td>
+                                @if (otherInvigilators.Any())
+                                {
+                                    @string.Join(", ", otherInvigilators)
+                                }
+                                else
+                                {
+                                    <span>No other invigilators</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                    </li>
+                }
+
+                <!-- Show first 5 pages -->
+                @for (int i = 1; i <= Math.Min(3, Model.TotalPages); i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                    </li>
+                }
+
+                <!-- Show ellipsis (...) if there are more than 5 pages and we need to skip pages -->
+                @if (Model.TotalPages > 5 && Model.CurrentPage < Model.TotalPages - 2)
+                {
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                }
+
+                <!-- Show the current page and pages around it -->
+                @if (Model.TotalPages > 5 && Model.CurrentPage >= 4 && Model.CurrentPage <= Model.TotalPages - 2)
+                {
+                    <li class="page-item @(Model.CurrentPage == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@Model.CurrentPage" asp-route-pageSize="@Model.PageSize">@Model.CurrentPage</a>
+                    </li>
+                }
+
+                <!-- Show last 2 pages -->
+                @for (int i = Math.Max(Model.TotalPages - 1, 6); i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                    </li>
+                }
+
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                    </li>
+                }
+            </ul>
 
 
-
-		<!-- Pagination Controls -->
-		@* <nav aria-label="Teacher Duty Pagination"> *@
-		@* 	<ul class="pagination justify-content-center"> *@
-		@* 		@for (int i = 1; i <= Model.TotalPages; i++) *@
-		@* 		{ *@
-		@* 			<li class="page-item @(i == Model.CurrentPage ? "active" : "")"> *@
-		@* 				<a class="page-link" href="@Url.Action("Index", new { page = i, search = Model.SearchQuery, sortBy = Model.SortBy, sortOrder = Model.SortOrder })">@i</a> *@
-		@* 			</li> *@
-		@* 		} *@
-		@* 	</ul> *@
-		@* </nav> *@
-	</div>
+        </div>
+    </div>
 </div>
-
 <script>
-	function assignDuty() {
-		const teacherName = document.getElementById('teacherName').value;
-		const department = document.getElementById('department').value;
-		const date = document.getElementById('date').value;
-		const time = document.getElementById('time').value;
-		const roomNo = document.getElementById('roomNo').value;
-		const blockName = document.getElementById('blockName').value;
-		const otherInvigilators = document.getElementById('otherInvigilators').value;
-	}
+        // 🔍 Search Teachers by Employee Number
+    function searchTable() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let table = document.getElementById("teacherTable");
+        let rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+            let cells = rows[i].getElementsByTagName("td");
+            let found = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].innerText.toLowerCase().includes(input)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            rows[i].style.display = found ? "" : "none";
+        }
+    }
+
+    // ⏳ Show Loader on Submit
+        function showLoader() {
+        // Get the button and loader
+        let button = document.getElementById("generateDutyBtn");
+        let loader = document.getElementById("loader");
+        let buttonText = document.getElementById("buttonText");
+
+        // Show the loader and hide the button text
+        loader.classList.remove("d-none");
+        buttonText.classList.add("d-none");  // Hide button text while loader is showing
+
+        // Disable the button to prevent multiple submissions
+        button.disabled = true;
+
+        return true; // Allow form submission to proceed
+    }
 
 </script>

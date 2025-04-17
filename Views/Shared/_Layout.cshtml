@@ -75,13 +75,14 @@
 								<li><a asp-controller="InsertStudent" asp-action="Student" class="nav_link sublink">Students</a></li>
 								<li><a asp-controller="InsertTeacher" asp-action="Teacher" class="nav_link sublink">Teachers</a></li>
 								<li><a asp-controller="InsertRoom" asp-action="Room" class="nav_link sublink">Rooms</a></li>
-								<li><a href="#" class="nav_link sublink">Courses</a></li>
+								<li><a asp-controller="InsertCourse" asp-action="Course" class="nav_link sublink">Courses</a></li>
+								<li><a asp-controller="DateSheet" asp-action="DateSheet" class="nav_link sublink">Date Sheet</a></li>
 							</ul>
 						</li>
 					</ul>
 					<ul class="menu_items">
 						<li class="item">
-							<a href="#" class="nav_link">
+							<a asp-controller="CourseRegister" asp-action="StudentCourses" class="nav_link">
 								<span class="navlink_icon">
 									<i class="bi bi-person-badge"></i>
 								</span><span class="navlink">

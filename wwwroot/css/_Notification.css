@@ -63,7 +63,7 @@
     transform-origin: left;
     background: linear-gradient(to right, var(--bg), var(--primary));
     border-radius: inherit;
-    animation: progress 2.5s 0.3s linear;
+    animation: progress 3s 0.4s linear;
 }
 
 
