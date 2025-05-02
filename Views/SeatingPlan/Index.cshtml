@@ -1,0 +1,142 @@
+﻿@* @model TeacherDutyPaginationViewModel *@
+
+@{
+    ViewData["title"] = "Generate Seating Plan";
+}
+
+<div class="container-fluid p-0">
+    <h2 class="text-center mb-4">Generate Seating Plan</h2>
+
+    <!-- Buttons for Actions -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <form action="@Url.Action("GenerateSeatingPlan", "SeatingPlan")" method="post" onsubmit="showLoader()">
+                <button type="submit" id="generatePlanBtn" class="btn btn-primary ms-3">
+                    <span id="buttonText">Generate Seating Plan</span>
+                    <span id="loader" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                </button>
+            </form>
+        </div>
+
+        <div class="me-3">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search By Employee Number..." style="width: 350px;" onkeyup="searchTable()">
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table" id="teacherTable">
+                <thead>
+                    <tr>
+                        <th>Room Number</th>
+                        <th>Student Registration #</th>
+                        <th>Course Title</th>
+                        <th>Seat Number</th>
+                        <th>Date</th>
+                        <th>TimeSlot</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var arrangement in Model.SeatingArrangements)
+                    {
+                        <tr>
+                            <td>@arrangement.Room.RoomNumber</td>
+                            <td>@arrangement.RegistrationNumber</td>
+                            <td>@arrangement.Paper.Course.CourseName (@arrangement.Paper.Course.CourseCode)</td>
+                            <td>@arrangement.Seat</td>
+                            <td>@arrangement.Paper.Date</td>
+                            <td>@arrangement.Paper.TimeSlot</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                    </li>
+                }
+
+                <!-- Show first 5 pages -->
+                @for (int i = 1; i <= Math.Min(3, Model.TotalPages); i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                    </li>
+                }
+
+                <!-- Show ellipsis (...) if there are more than 5 pages and we need to skip pages -->
+                @if (Model.TotalPages > 5 && Model.CurrentPage < Model.TotalPages - 2)
+                {
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                }
+
+                <!-- Show the current page and pages around it -->
+                @if (Model.TotalPages > 5 && Model.CurrentPage >= 4 && Model.CurrentPage <= Model.TotalPages - 2)
+                {
+                    <li class="page-item @(Model.CurrentPage == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@Model.CurrentPage" asp-route-pageSize="@Model.PageSize">@Model.CurrentPage</a>
+                    </li>
+                }
+
+                <!-- Show last 2 pages -->
+                @for (int i = Math.Max(Model.TotalPages - 1, 6); i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                    </li>
+                }
+
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+        // 🔍 Search Teachers by Employee Number
+    function searchTable() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let table = document.getElementById("teacherTable");
+        let rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+            let cells = rows[i].getElementsByTagName("td");
+            let found = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].innerText.toLowerCase().includes(input)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            rows[i].style.display = found ? "" : "none";
+        }
+    }
+
+    // ⏳ Show Loader on Submit
+        function showLoader() {
+        // Get the button and loader
+        let button = document.getElementById("generatePlanBtn");
+        let loader = document.getElementById("loader");
+        let buttonText = document.getElementById("buttonText");
+
+        // Show the loader and hide the button text
+        loader.classList.remove("d-none");
+        buttonText.classList.add("d-none");  // Hide button text while loader is showing
+
+        // Disable the button to prevent multiple submissions
+        button.disabled = true;
+
+        return true; // Allow form submission to proceed
+    }
+
+</script>

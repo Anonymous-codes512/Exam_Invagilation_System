@@ -1,40 +1,54 @@
-﻿using Exam_Invagilation_System.Entities;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Exam_Invagilation_System.Entities;  // Ensure Teacher model is included
 
-namespace YourProjectNamespace.Api
+namespace Exam_Invagilation_System.API
 {
-    [Route("api/teacher")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class TeacherController : Controller
+    public class TeacherController : ControllerBase
     {
         private readonly AppDbContext _context;
 
+        // Inject ApplicationDbContext to interact with the database
         public TeacherController(AppDbContext context)
         {
             _context = context;
         }
 
+        // POST api/teacher/attendance_with_login
         [HttpPost("attendance_with_login")]
-        public IActionResult MarkAttendance([FromBody] string teacherEmployeeNumber)
+        public async Task<IActionResult> MarkAttendance([FromBody] TeacherAttendanceRequest request)
         {
-            if (string.IsNullOrEmpty(teacherEmployeeNumber))
-                return BadRequest("Teacher Employee Number is required");
+            Console.WriteLine(request.teacherEmployeeNumber);
+            if (string.IsNullOrEmpty(request.teacherEmployeeNumber))
+            {
+                return BadRequest(new { message = "Teacher Employee Number is required" });
+            }
 
-            var teacher = _context.Teachers
-                .FirstOrDefault(t => t.TeacherEmployeeNumber == teacherEmployeeNumber);
+            // Query the database to find the teacher by TeacherEmployeeNumber
+            var teacher = await _context.Teachers.Where(t => t.TeacherEmployeeNumber == request.teacherEmployeeNumber).FirstOrDefaultAsync();
 
             if (teacher == null)
-                return NotFound("Teacher not found");
+            {
+                return NotFound(new { message = "Teacher not found" });
+            }
 
-            Console.WriteLine($"✅ Teacher Found: {teacher.TeacherName}");
-
+            // Return the teacher details if found
             return Ok(new
             {
-                message = "Attendance marked successfully",
                 teacherName = teacher.TeacherName,
-                teacherEmail = teacher.TeacherEmail
+                teacherEmail = teacher.TeacherEmail,
+                teacherDesignation = teacher.TeacherDesignation,
+                teacherDepartment = teacher.TeacherDepartment,
+                message = "Attendance marked successfully"
             });
         }
+    }
 
+    // Request Body Model
+    public class TeacherAttendanceRequest
+    {
+        public string teacherEmployeeNumber { get; set; }
     }
 }

@@ -5,6 +5,7 @@
     "anonymousAuthentication": true,
     "iisExpress": {
         "applicationUrl": "http://192.168.100.12:34715",
+        //"applicationUrl": "http://192.168.1.229:34715",
         "sslPort": 44331
     }
   },
@@ -14,6 +15,8 @@
         "dotnetRunMessages": true,
         "launchBrowser": true,
         "applicationUrl": "http://192.168.100.12:5157;https://192.168.100.12:7035",
+        //"applicationUrl": "http://192.168.1.229:5157;https://192.168.1.229:7035",
+
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development"
         }
@@ -23,6 +26,7 @@
         "dotnetRunMessages": true,
         "launchBrowser": true,
         "applicationUrl": "http://192.168.100.12:5157;https://192.168.100.12:7035",
+        //"applicationUrl": "http://192.168.1.229:5157;https://192.168.1.229:7035",
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development"
         }

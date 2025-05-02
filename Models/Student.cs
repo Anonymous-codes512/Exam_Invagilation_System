@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Exam_Invagilation_System.Models
 {
@@ -33,7 +33,9 @@ namespace Exam_Invagilation_System.Models
         [Required(ErrorMessage = "Dues status is required")]
         public bool DuesClear { get; set; }
 
-        public ICollection<StudentCourse>? StudentCourses { get; set; } = new List<StudentCourse>();
+        [System.Text.Json.Serialization.JsonIgnore]
+        public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
+
     }
 
 }

@@ -18,7 +18,7 @@ namespace Exam_Invagilation_System.Entities
         //public DbSet<Attendance> Attendances { get; set; }
         public DbSet<Duty> Duties { get; set; }
         public DbSet<Paper> Papers { get; set; }
-        //public DbSet<SittingArrangement> SittingArrangements { get; set; }
+        public DbSet<SittingArrangement> SittingArrangements { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -117,6 +117,27 @@ namespace Exam_Invagilation_System.Entities
                 .WithMany()
                 .HasForeignKey(d => d.RoomId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SittingArrangement>()
+                .HasOne(sa => sa.Paper)
+                .WithMany()
+                .HasForeignKey(sa => sa.PaperId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // SittingArrangement - Room Relationship
+            modelBuilder.Entity<SittingArrangement>()
+                .HasOne(sa => sa.Room)
+                .WithMany()
+                .HasForeignKey(sa => sa.RoomId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // SittingArrangement - Student Relationship
+            modelBuilder.Entity<SittingArrangement>()
+                .HasOne(sa => sa.Student)
+                .WithMany()
+                .HasPrincipalKey(s => s.RegistrationNumber)
+                .HasForeignKey(sc => sc.RegistrationNumber)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

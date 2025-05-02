@@ -18,26 +18,44 @@ namespace Exam_Invagilation_System.Controllers
         // 📅 Fetch DateSheet Data
         public IActionResult DateSheet(int pageNumber = 1, int pageSize = 10)
         {
-            // Fetch DateSheet data without grouping
+            // Fetch DateSheet data, grouped by Date (same date will appear in a single row)
             var dateSheets = _db.Papers
                 .Include(ds => ds.Room)
                 .Include(ds => ds.Course)
                 .OrderBy(ds => ds.Date)
+                .GroupBy(ds => ds.Date) // Group by Date
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
+                .Select(group => new DateSheetViewModel
+                {
+                    Date = group.Key, // The grouped date
+                    Papers = group.Select(ds => new PaperViewModel
+                    {
+                        PaperId = ds.PaperId, // Include PaperId
+                        CourseCode = ds.Course.CourseCode,
+                        CourseName = ds.Course.CourseName,
+                        RoomNumber = ds.Room.RoomNumber,
+                        Location = ds.Room.Location,
+                        TimeSlot = ds.TimeSlot,
+                        ExamTerm = ds.ExamTerm
+                    }).ToList()
+                })
                 .ToList();
 
+            // Get all courses and rooms for filtering (optional)
             var Courses = _db.Courses.ToList();
             var Rooms = _db.Rooms.ToList();
 
+            // Calculate the total number of distinct dates for pagination
             var totalPages = (int)Math.Ceiling((double)_db.Papers
                 .Select(ds => ds.Date)
                 .Distinct()
                 .Count() / pageSize);
 
+            // Prepare the model for the view
             var model = new DateSheetPaginationViewModel
             {
-                DateSheets = dateSheets,
+                DateSheets = dateSheets, // Pass the grouped date sheets
                 Courses = Courses,
                 Rooms = Rooms,
                 CurrentPage = pageNumber,
@@ -47,6 +65,7 @@ namespace Exam_Invagilation_System.Controllers
 
             return View(model);
         }
+
 
         [HttpPost("AddDateSheet")]
         public IActionResult AddDateSheet(Paper paper, string StartTime, string EndTime)

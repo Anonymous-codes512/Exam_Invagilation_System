@@ -21,67 +21,109 @@
             <table class="table" id="DateSheetTable">
                 <thead>
                     <tr>
-                        <th>Sr #</th>
-                        <th>Course Code</th>
-                        <th>Course Name</th>
-                        <th>Room Number</th>
-                        <th>Location</th>
-                        <th>Exam Term</th>
                         <th>Date</th>
-                        <th>Time Slot</th>
+                        <th>Course Codes</th>
+                        <th>Course Names</th>
+                        <th>Room Numbers</th>
+                        <th>Locations</th>
+                        <th>Time Slots</th>
+                        <th>Exam Terms</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var dateSheet in Model.DateSheets.Select((value, index) => new { value, index }))
+                    @foreach (var dateSheet in Model.DateSheets)
                     {
-                         <tr>
-                             <td>@(dateSheet.index + 1)</td>
-                             <td>@dateSheet.value.CourseCode</td>
-                             <td>@dateSheet.value.Course.CourseName</td>
-                             <td>@dateSheet.value.Room.RoomNumber</td>
-                             <td>@dateSheet.value.Room.Location</td>
-                             <td>@dateSheet.value.ExamTerm</td>
-                            <td>@dateSheet.value.Date</td>
-                             <td>@dateSheet.value.TimeSlot</td>
-                             <td>
-                                <button class="btn btn-warning btn-sm" onclick='editDateSheet(@Html.Raw(Json.Serialize(dateSheet)))'>
-                                     <i class="bi bi-pencil-square"></i>
-                                 </button>
-                                 <button type="button" class="btn btn-danger btn-sm" onclick="openDeleteModal('@dateSheet.value.PaperId')">
-                                     <i class="bi bi-trash"></i>
-                                 </button>
-                             </td>
-                         </tr>
-                     }
+                        <tr>
+                            <td class="align-middle text-center">@dateSheet.Date</td>
+
+                            <!-- Display all papers for this date in a single row -->
+                            <td>
+                                @foreach (var paper in dateSheet.Papers)
+                                {
+                                    <p style="margin: 1.2rem 0">@paper.CourseCode</p>
+                                }
+                            </td>
+
+                            <td>
+                                @foreach (var paper in dateSheet.Papers)
+                                {
+                                    <p class="text-truncate" style="max-width: 150px; margin: 1.2rem 0" title="@paper.CourseName">@paper.CourseName</p>
+                                }
+                            </td>
+
+                            <td>
+                                @foreach (var paper in dateSheet.Papers)
+                                {
+                                    <p style="margin: 1.2rem 0">@paper.RoomNumber</p>
+                                }
+                            </td>
+
+                            <td>
+                                @foreach (var paper in dateSheet.Papers)
+                                {
+                                    <p class="text-truncate" style="max-width: 150px; margin: 1.2rem 0" title="@paper.Location">@paper.Location</p>
+                                }
+                            </td>
+
+                            <td>
+                                @foreach (var paper in dateSheet.Papers)
+                                {
+                                    <p style="margin: 1.2rem 0">@paper.TimeSlot</p>
+                                }
+                            </td>
+
+                            <td>
+                                @foreach (var paper in dateSheet.Papers)
+                                {
+                                    <p style="margin: 1.2rem 0">@paper.ExamTerm</p>
+                                }
+                            </td>
+
+                            <td>
+                                @foreach (var paper in dateSheet.Papers)
+                                {
+                                    <!-- Pass PaperId for actions -->
+                                    <button class="btn btn-warning btn-sm my-1" onclick="editDateSheet(@Html.Raw(Json.Serialize(paper)))">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm my-1" onclick="openDeleteModal('@paper.PaperId')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                    <br />
+                                }
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
 
             <!-- Pagination Links -->
-             <ul class="pagination justify-content-center">
-                 @if (Model.CurrentPage > 1)
-                 {
-                     <li class="page-item">
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
                         <a class="page-link" asp-action="DateSheet" asp-route-pageNumber="@(Model.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
-                     </li>
-                 }
+                    </li>
+                }
 
-                 @for (int i = 1; i <= Model.TotalPages; i++)
-                 {
-                     <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
                         <a class="page-link" asp-action="DateSheet" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
-                     </li>
-                 }
+                    </li>
+                }
 
-                 @if (Model.CurrentPage < Model.TotalPages)
-                 {
-                     <li class="page-item">
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item">
                         <a class="page-link" asp-action="DateSheet" asp-route-pageNumber="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
-                     </li>
-                 }
-             </ul>
+                    </li>
+                }
+            </ul>
         </div>
     </div>
+
 
      <!-- Add Course Modal -->
     <div class="modal fade" id="addDateSheetModel" tabindex="-1" aria-labelledby="addDateSheetModelLabel" aria-hidden="true">
@@ -412,5 +454,5 @@
 
         return true; // Allow form submission
     }
-
+    
 </script>
