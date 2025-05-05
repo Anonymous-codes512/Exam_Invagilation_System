@@ -4,8 +4,9 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-        "applicationUrl": "http://192.168.100.12:34715",
-        //"applicationUrl": "http://192.168.1.229:34715",
+        //"applicationUrl": "http://192.168.100.12:34715",
+        //"applicationUrl": "http://10.110.13.96:34715",
+        "applicationUrl": "http://192.168.1.27:34715",
         "sslPort": 44331
     }
   },
@@ -14,8 +15,9 @@
         "commandName": "Project",
         "dotnetRunMessages": true,
         "launchBrowser": true,
-        "applicationUrl": "http://192.168.100.12:5157;https://192.168.100.12:7035",
-        //"applicationUrl": "http://192.168.1.229:5157;https://192.168.1.229:7035",
+        //"applicationUrl": "http://192.168.100.12:5157;https://192.168.100.12:7035",
+        //"applicationUrl": "http://10.110.13.96:5157;https://10.110.13.96:7035",
+        "applicationUrl": "http://192.168.1.27:5157;https://192.168.1.27:7035",
 
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development"
@@ -25,8 +27,9 @@
         "commandName": "Project",
         "dotnetRunMessages": true,
         "launchBrowser": true,
-        "applicationUrl": "http://192.168.100.12:5157;https://192.168.100.12:7035",
-        //"applicationUrl": "http://192.168.1.229:5157;https://192.168.1.229:7035",
+        //"applicationUrl": "http://192.168.100.12:5157;https://192.168.100.12:7035",
+        //"applicationUrl": "http://10.110.13.96:5157;https://10.110.13.96:7035",
+        "applicationUrl": "http://192.168.1.27;https://192.168.1.27:7035",
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development"
         }

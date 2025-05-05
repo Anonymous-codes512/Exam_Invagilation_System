@@ -4,7 +4,7 @@ using Exam_Invagilation_System.Entities;  // Ensure Teacher model is included
 
 namespace Exam_Invagilation_System.API
 {
-    [Route("api/[controller]")]
+    [Route("api/teacher")]
     [ApiController]
     public class TeacherController : ControllerBase
     {
@@ -20,23 +20,22 @@ namespace Exam_Invagilation_System.API
         [HttpPost("attendance_with_login")]
         public async Task<IActionResult> MarkAttendance([FromBody] TeacherAttendanceRequest request)
         {
-            Console.WriteLine(request.teacherEmployeeNumber);
+            Console.WriteLine($"[TeacherController] Scanning teacher: {request.teacherEmployeeNumber}");
+
             if (string.IsNullOrEmpty(request.teacherEmployeeNumber))
             {
                 return BadRequest(new { message = "Teacher Employee Number is required" });
             }
 
             // Query the database to find the teacher by TeacherEmployeeNumber
-            var teacher = await _context.Teachers.Where(t => t.TeacherEmployeeNumber == request.teacherEmployeeNumber).FirstOrDefaultAsync();
-
+           var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.TeacherEmployeeNumber == request.teacherEmployeeNumber);
             if (teacher == null)
-            {
                 return NotFound(new { message = "Teacher not found" });
-            }
 
             // Return the teacher details if found
             return Ok(new
             {
+                teacherEmployeeNumber = teacher.TeacherEmployeeNumber,
                 teacherName = teacher.TeacherName,
                 teacherEmail = teacher.TeacherEmail,
                 teacherDesignation = teacher.TeacherDesignation,

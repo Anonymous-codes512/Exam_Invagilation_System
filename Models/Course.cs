@@ -15,6 +15,7 @@ public class Course
     public required string CourseName { get; set; }
 
     [Required(ErrorMessage = "Course PreRequisite is Required")]
+
     public required string PreRequisite { get; set; }
 
     [Required(ErrorMessage = "Teacher is Required")]

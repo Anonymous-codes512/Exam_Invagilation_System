@@ -9,6 +9,9 @@ public class StudentCourse
     [JsonIgnore]
     public Student Student { get; set; }
 
+    public string CourseAttendance { get; set; }
+
+
     [ForeignKey(nameof(CourseCode))]
     public string CourseCode { get; set; }
     public Course Course { get; set; }

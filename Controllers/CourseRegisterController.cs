@@ -42,6 +42,7 @@ namespace Exam_Invagilation_System.Controllers
                     {
                         CourseCode = sc.CourseCode,
                         CourseName = sc.Course.CourseName,
+                        CourseAttendance = sc.CourseAttendance,
                         TeacherName = sc.Course.Teacher.TeacherName,  // Assuming Teacher is included in the Course entity
                         TeacherEmployeeNumber = sc.Course.Teacher.TeacherEmployeeNumber  // Assuming TeacherEmployeeNumber is part of Course
                     }).ToList()  // List of courses for the student

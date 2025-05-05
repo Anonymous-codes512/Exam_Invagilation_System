@@ -15,7 +15,7 @@ namespace Exam_Invagilation_System.Entities
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Room> Rooms { get; set; }
 
-        //public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<Attendance> Attendances { get; set; }
         public DbSet<Duty> Duties { get; set; }
         public DbSet<Paper> Papers { get; set; }
         public DbSet<SittingArrangement> SittingArrangements { get; set; }
@@ -138,6 +138,38 @@ namespace Exam_Invagilation_System.Entities
                 .HasPrincipalKey(s => s.RegistrationNumber)
                 .HasForeignKey(sc => sc.RegistrationNumber)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // ✅ Attendance - Student Relationship (RegistrationNumber as FK)
+            modelBuilder.Entity<Attendance>()
+                .HasOne(a => a.Student)
+                .WithMany()
+                .HasPrincipalKey(s => s.RegistrationNumber)
+                .HasForeignKey(a => a.RegistrationNumber)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ✅ Attendance - Teacher Relationship (TeacherEmployeeNumber as FK)
+            modelBuilder.Entity<Attendance>()
+                .HasOne(a => a.Teacher)
+                .WithMany()
+                .HasPrincipalKey(t => t.TeacherEmployeeNumber)
+                .HasForeignKey(a => a.TeacherEmployeeNumber)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ✅ Attendance - Room Relationship (RoomNumber as FK)
+            modelBuilder.Entity<Attendance>()
+                .HasOne(a => a.Room)
+                .WithMany()
+                .HasPrincipalKey(r => r.RoomNumber)
+                .HasForeignKey(a => a.RoomNumber)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ✅ Attendance - Paper Relationship
+            modelBuilder.Entity<Attendance>()
+                .HasOne(a => a.Paper)
+                .WithMany()
+                .HasForeignKey(a => a.PaperId)
+                .HasPrincipalKey(p => p.PaperId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

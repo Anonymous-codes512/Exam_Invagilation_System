@@ -26,6 +26,7 @@
                         <th class="text-center">Student Name</th>
                         <th class="text-center">Courses Code</th>
                         <th>Courses Name</th>
+                        <th>Attendance</th>
                         <th>Teacher Name</th>
                         <th>Actions</th>
                     </tr>
@@ -51,6 +52,12 @@
                                 @foreach (var course in studentCourse.Courses)
                                 {
                                     <p style="margin : 1.3rem 0">@course.CourseName</p>
+                                }
+                            </td>
+                            <td class="align-middle">
+                                @foreach (var course in studentCourse.Courses)
+                                {
+                                    <p style="margin : 1.3rem 0">@course.CourseAttendance</p>
                                 }
                             </td>
                             <td class="align-middle">
