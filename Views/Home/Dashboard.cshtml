@@ -62,24 +62,24 @@
 								<th>Reported By</th>
 								<th>Date</th>
 								<th>Time Slot</th>
-								<th>Incident</th>
-								<th>Action Taken</th>
+								<th>Unfair Type</th>
+								<th>Description</th>
 							</tr>
 						</thead>
-						<tbody>
-							@foreach (var report in ViewData["CheatingReports"] as IEnumerable<dynamic>)
-							{
-								<tr>
-									<td>@report.StudentName</td>
-									<td>@report.TeacherName</td>
-									<td>@report.CourseCode</td>
-									<td>@report.RoomId</td>
-									<td>@report.Date.ToString("yyyy-MM-dd")</td>
-									<td>@report.TimeSlot</td>
-									<td>@report.Description</td>
-								</tr>
-							}
-						</tbody>
+						@foreach (var report in ViewData["CheatingReports"] as IEnumerable<dynamic>)
+						{
+							<tr>
+								<td>@report.StudentName</td>
+								<td>@report.CourseCode</td>
+								<td>@report.RoomNumber</td> 
+								<td>@report.TeacherName</td>
+								<td>@report.Date</td>
+								<td>@report.TimeSlot</td>
+								<td>@report.UnfairType</td>
+								<td>@report.Description</td>
+							</tr>
+						}
+
 					</table>
 				</div>
 			</div>

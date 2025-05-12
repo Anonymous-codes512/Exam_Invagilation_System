@@ -7,7 +7,7 @@ namespace Exam_Invagilation_System.Entities
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        //public DbSet<UserAccount> UserAccounts { get; set; }
+        public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<StudentCourse> StudentCourses { get; set; }
         public DbSet<Course> Courses { get; set; }
@@ -19,13 +19,12 @@ namespace Exam_Invagilation_System.Entities
         public DbSet<Duty> Duties { get; set; }
         public DbSet<Paper> Papers { get; set; }
         public DbSet<SittingArrangement> SittingArrangements { get; set; }
+        public DbSet<PaperSummaryCollection> PaperSummaryCollections { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // ✅ Define Student Primary Key
             modelBuilder.Entity<Student>().HasKey(s => s.StudentId);
-
-            // ✅ Define RegistrationNumber as an Alternate Key (Ensures uniqueness)
             modelBuilder.Entity<Student>().HasAlternateKey(s => s.RegistrationNumber);
             modelBuilder.Entity<Student>().HasIndex(s => s.RegistrationNumber).IsUnique();
 
@@ -87,6 +86,20 @@ namespace Exam_Invagilation_System.Entities
                 .HasForeignKey(cr => cr.TeacherEmployeeNumber)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<CheatingReport>()
+                .HasOne(cr => cr.Course)
+                .WithMany()
+               .HasForeignKey(cr => cr.CourseCode) // Foreign key on CheatingReport
+               .HasPrincipalKey(c => c.CourseCode) // Principal key on Course
+               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CheatingReport>()
+               .HasOne(cr => cr.Room)
+               .WithMany()
+               .HasForeignKey(cr => cr.RoomNumber) // Foreign key on CheatingReport
+               .HasPrincipalKey(r => r.RoomNumber) // Principal key on Room
+               .OnDelete(DeleteBehavior.Restrict);
+       
             modelBuilder.Entity<Paper>().HasKey(p => p.PaperId);
             // ✅ Define Paper - Course Relationship
             modelBuilder.Entity<Paper>()
@@ -95,7 +108,6 @@ namespace Exam_Invagilation_System.Entities
                 .HasForeignKey(p => p.CourseCode)
                 .HasPrincipalKey(c => c.CourseCode)
                 .OnDelete(DeleteBehavior.Restrict);
-
 
             // ✅ Define Paper - Room Relationship (Using RoomId as FK)
             modelBuilder.Entity<Paper>()
@@ -111,7 +123,7 @@ namespace Exam_Invagilation_System.Entities
                 .WithMany()
                 .HasForeignKey(d => d.TeacherId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             modelBuilder.Entity<Duty>()
                 .HasOne(d => d.Room)
                 .WithMany()
@@ -170,6 +182,15 @@ namespace Exam_Invagilation_System.Entities
                 .HasForeignKey(a => a.PaperId)
                 .HasPrincipalKey(p => p.PaperId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // New PaperSummaryCollection - Teacher Relationship
+            modelBuilder.Entity<PaperSummaryCollection>()
+                .HasOne(psc => psc.Teacher)
+                .WithMany()
+                .HasForeignKey(psc => psc.TeacherEmployeeNumber)
+                .HasPrincipalKey(t => t.TeacherEmployeeNumber)
+                .OnDelete(DeleteBehavior.Restrict);  // Restrict deletion of teacher
+
         }
     }
 }

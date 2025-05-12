@@ -1,5 +1,6 @@
 ﻿using Exam_Invagilation_System.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,9 +9,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 
+
 // Configure the database context
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
+           .EnableSensitiveDataLogging();  // Enable sensitive data logging here
+});
+
 
 builder.Services.AddCors(options =>
 {
