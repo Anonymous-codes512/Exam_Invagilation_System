@@ -137,6 +137,10 @@ namespace Exam_Invagilation_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("TeacherEmployeeNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");

@@ -1,0 +1,44 @@
+﻿@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Access Denied - Exam_Invagilation_System</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="icon" type="image/x-icon" href="~/favicon.ico" asp-append-version="true" />
+	<!-- Bootstrap Icons -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center">
+	<div class="d-flex align-items-center justify-content-center">
+		<div class="text-center">
+			<div class="mb-4 d-inline-block align-items-center justify-content-center">
+				<span class="display-1 fw-bold" style="color: #105da4;">4</span>
+				<img src="~/images/CUI WAH EIS.png" style="height:75px; width: 75px;" />
+				<span class="display-1 fw-bold" style="color: #105da4;">3</span>
+			</div>
+
+			<h1 class="mb-1">Access to this page is restricted</h1>
+			<p class="mb-4 text-muted">Please check with the site admin if you believe this is a mistake.</p>
+
+			<!-- ✅ Updated Button to prevent back navigation -->
+			<button class="btn btn-primary px-4" onclick="goToLogin()">Go Back</button>
+		</div>
+	</div>
+
+	<script>
+		function goToLogin() {
+			// This replaces current page in browser history
+			window.location.replace("/Auth/Login");
+		}
+	</script>
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

@@ -1,10 +1,13 @@
 ﻿using Exam_Invagilation_System.Entities;
 using Exam_Invagilation_System.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Exam_Invagilation_System.Controllers
 {
+    [Authorize(AuthenticationSchemes = "MyCookieAuth")]
+
     public class SeatingPlanController : Controller
     {
         private readonly AppDbContext _db;

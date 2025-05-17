@@ -6,7 +6,7 @@
     --headline: #20242F;
     --primary-text: #333;
     --dropzone-over: #d4d4d4;
-    --header-height: 4.5rem;
+    --header-height: 5rem;
     --nav-width: 225px;
     --collapsed-nav-width: 80px;
     --first-color: #4070f4;
@@ -228,11 +228,27 @@ nav > ul {
             background-color: var(--blue-color);
             color: var(--white-color);
         }
-
-        nav > ul > li > i {
-            stroke: var(--white-color);
-            font-size: 1.5rem;
+        nav > ul > li > a {
+            height: 3rem;
+            color: var(--grey-color);
+            cursor: pointer;
+            display: flex;
+            flex-direction: row;
+            border-radius: 0.5rem;
+            align-items: center;
+            gap: 1rem;
+            padding-left: 0.5rem;
+            width: 100%;
+            transition: all 0.2s ease-in-out
         }
+            nav > ul > li > a:hover {
+                background-color: var(--blue-color);
+                color: var(--white-color);
+            }
+            nav > ul > li > i {
+                stroke: var(--white-color);
+                font-size: 1.5rem;
+            }
 
         nav > ul > li:hover > i {
             stroke: var(--text);

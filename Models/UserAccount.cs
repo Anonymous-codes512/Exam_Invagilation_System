@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 namespace Exam_Invagilation_System.Models
 {
     [Index(nameof(Email), IsUnique = true)]
-    public class UserAccount
+    public class UserAccount 
     {
         [Key]
         public int Id { get; set; }

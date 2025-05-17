@@ -17,7 +17,7 @@
 <body id="body-pd">
 	<header>
 		<nav class="navbar">
-			<div class="logo_item">
+			<div class="logo_item mb-2">
 				<i class="bx bx-menu" id="sidebarOpen"></i>
 				<img src="~/images/CUI WAH EIS.png" alt="">Exam_Invigilation_System
 			</div>
@@ -32,22 +32,25 @@
 			</div>
 			<div class="dropdown_wrapper hide dropdown_wrapper--fade-in none">
 				<nav>
+					@* <ul> *@
+					@* 	<li> *@
+					@* 		<i class="bx bxs-user-circle"></i> *@
+					@* 		My profile *@
+					@* 	</li> *@
+					@* 	<li> *@
+					@* 		<i class="bx bx-cog"></i> *@
+					@* 		Account Settings *@
+					@* 	</li> *@
+					@* </ul> *@
+					@* <hr class="divider"> *@
 					<ul>
 						<li>
-							<i class="bx bxs-user-circle"></i>
-							My profile
+							<a class="text-decoration-none"  asp-controller="Auth" asp-action="Logout">
+								<i class="bx bx-log-out-circle"></i>
+								Sign Out
+							</a>
 						</li>
-						<li>
-							<i class="bx bx-cog"></i>
-							Account Settings
-						</li>
-					</ul>
-					<hr class="divider">
-					<ul>
-						<li>
-							<i class="bx bx-log-out-circle"></i>
-							Sign Out
-						</li>
+
 					</ul>
 				</nav>
 			</div>
@@ -105,7 +108,7 @@
 							</a>
 						</li>
 						<li class="item">
-							<a href="#" class="nav_link">
+							<a asp-controller="Attendance" asp-action="Index" class="nav_link">
 								<span class="navlink_icon">
 									<i class='bx bx-check nav_icon'></i>
 								</span>
@@ -115,14 +118,14 @@
 					</ul>
 					<ul class="menu_items">
 						<li class="item">
-							<a href="#" class="nav_link">
+							<a asp-controller="PaperSummary" asp-action="Index" class="nav_link">
 								<span class="navlink_icon">
 									<i class='bx bx-book nav_icon'></i>
 								</span><span class="navlink">Paper Summary</span>
 							</a>
 						</li>
 						<li class="item">
-							<a href="#" class="nav_link">
+							<a asp-controller="UnfairMeansReporting" asp-action="Index" class="nav_link">
 								<span class="navlink_icon">
 									<i class='bx bx-x nav_icon'></i>
 								</span><span class="navlink">Unfair Reporting</span>

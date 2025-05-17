@@ -1,4 +1,6 @@
-﻿using Exam_Invagilation_System.Models;
+﻿using System.Collections.Generic;
+using System.Reflection.Emit;
+using Exam_Invagilation_System.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Exam_Invagilation_System.Entities
@@ -99,7 +101,7 @@ namespace Exam_Invagilation_System.Entities
                .HasForeignKey(cr => cr.RoomNumber) // Foreign key on CheatingReport
                .HasPrincipalKey(r => r.RoomNumber) // Principal key on Room
                .OnDelete(DeleteBehavior.Restrict);
-       
+
             modelBuilder.Entity<Paper>().HasKey(p => p.PaperId);
             // ✅ Define Paper - Course Relationship
             modelBuilder.Entity<Paper>()

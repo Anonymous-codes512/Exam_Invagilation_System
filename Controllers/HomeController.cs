@@ -3,9 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Exam_Invagilation_System.Models;
 using Exam_Invagilation_System.Entities;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Exam_Invagilation_System.Controllers
 {
+    [Authorize(AuthenticationSchemes = "MyCookieAuth")]
+
     public class HomeController : Controller
     {
         private readonly AppDbContext _context;

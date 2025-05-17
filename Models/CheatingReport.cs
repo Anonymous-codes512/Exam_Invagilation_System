@@ -37,6 +37,7 @@ namespace Exam_Invagilation_System.Models
         public string UnfairType { get; set; }
         public string OtherDetails { get; set; }
         public string IncidentDetails { get; set; }
+        public string Status { get; set; }
     }
 
 }

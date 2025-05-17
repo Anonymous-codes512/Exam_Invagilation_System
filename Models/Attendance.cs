@@ -11,7 +11,7 @@ public class Attendance
     // Foreign Key for Teacher
     public string TeacherEmployeeNumber { get; set; }
     public virtual Teacher Teacher { get; set; }
-
+    
     // Foreign Key for Room
     public string RoomNumber { get; set; }
     public virtual Room Room { get; set; }

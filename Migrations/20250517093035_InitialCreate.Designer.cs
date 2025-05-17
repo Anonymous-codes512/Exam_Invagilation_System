@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Exam_Invagilation_System.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250407065333_Exam_Invigilation_System_Migrations")]
-    partial class Exam_Invigilation_System_Migrations
+    [Migration("20250517093035_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,53 @@ namespace Exam_Invagilation_System.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Attendance", b =>
+                {
+                    b.Property<int>("AttendanceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttendanceId"));
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("PaperId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RegistrationNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoomNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TeacherEmployeeNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TimeSlot")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AttendanceId");
+
+                    b.HasIndex("PaperId");
+
+                    b.HasIndex("RegistrationNumber");
+
+                    b.HasIndex("RoomNumber");
+
+                    b.HasIndex("TeacherEmployeeNumber");
+
+                    b.ToTable("Attendances");
+                });
 
             modelBuilder.Entity("Course", b =>
                 {
@@ -69,12 +116,19 @@ namespace Exam_Invagilation_System.Migrations
 
                     b.Property<string>("CourseCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
                     b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IncidentDetails")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtherDetails")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -82,8 +136,13 @@ namespace Exam_Invagilation_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
+                    b.Property<string>("RoomNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TeacherEmployeeNumber")
                         .IsRequired()
@@ -93,13 +152,57 @@ namespace Exam_Invagilation_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UnfairType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("CheatingReportId");
 
+                    b.HasIndex("CourseCode");
+
                     b.HasIndex("RegistrationNumber");
+
+                    b.HasIndex("RoomNumber");
 
                     b.HasIndex("TeacherEmployeeNumber");
 
                     b.ToTable("CheatingReports");
+                });
+
+            modelBuilder.Entity("Exam_Invagilation_System.Models.Duty", b =>
+                {
+                    b.Property<int>("DutyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DutyId"));
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("PaperId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TimeSlot")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("DutyId");
+
+                    b.HasIndex("PaperId");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("Duties");
                 });
 
             modelBuilder.Entity("Exam_Invagilation_System.Models.Paper", b =>
@@ -119,14 +222,16 @@ namespace Exam_Invagilation_System.Migrations
 
                     b.Property<string>("ExamTerm")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
 
                     b.Property<string>("TimeSlot")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("PaperId");
 
@@ -135,6 +240,46 @@ namespace Exam_Invagilation_System.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("Papers");
+                });
+
+            modelBuilder.Entity("Exam_Invagilation_System.Models.PaperSummaryCollection", b =>
+                {
+                    b.Property<int>("PaperSummaryCollectionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaperSummaryCollectionId"));
+
+                    b.Property<DateTime>("CollectedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CollectorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumberOfPapers")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SelectedPaper")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TeacherEmployeeNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("TotalPapers")
+                        .HasColumnType("int");
+
+                    b.Property<string>("roomnumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PaperSummaryCollectionId");
+
+                    b.HasIndex("TeacherEmployeeNumber");
+
+                    b.ToTable("PaperSummaryCollections");
                 });
 
             modelBuilder.Entity("Exam_Invagilation_System.Models.Room", b =>
@@ -163,8 +308,6 @@ namespace Exam_Invagilation_System.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("RoomId");
-
-                    b.HasAlternateKey("RoomNumber");
 
                     b.HasIndex("RoomNumber")
                         .IsUnique();
@@ -225,6 +368,10 @@ namespace Exam_Invagilation_System.Migrations
                     b.Property<string>("CourseCode")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("CourseAttendance")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("RegistrationNumber", "CourseCode");
 
                     b.HasIndex("CourseCode");
@@ -268,6 +415,105 @@ namespace Exam_Invagilation_System.Migrations
                     b.ToTable("Teachers");
                 });
 
+            modelBuilder.Entity("Exam_Invagilation_System.Models.UserAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("UserAccounts");
+                });
+
+            modelBuilder.Entity("SittingArrangement", b =>
+                {
+                    b.Property<int>("SittingArrangementId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SittingArrangementId"));
+
+                    b.Property<int>("PaperId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RegistrationNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Seat")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SittingArrangementId");
+
+                    b.HasIndex("PaperId");
+
+                    b.HasIndex("RegistrationNumber");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("SittingArrangements");
+                });
+
+            modelBuilder.Entity("Attendance", b =>
+                {
+                    b.HasOne("Exam_Invagilation_System.Models.Paper", "Paper")
+                        .WithMany()
+                        .HasForeignKey("PaperId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Exam_Invagilation_System.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("RegistrationNumber")
+                        .HasPrincipalKey("RegistrationNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Exam_Invagilation_System.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomNumber")
+                        .HasPrincipalKey("RoomNumber")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Exam_Invagilation_System.Models.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherEmployeeNumber")
+                        .HasPrincipalKey("TeacherEmployeeNumber")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Paper");
+
+                    b.Navigation("Room");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Teacher");
+                });
+
             modelBuilder.Entity("Course", b =>
                 {
                     b.HasOne("Exam_Invagilation_System.Models.Teacher", "Teacher")
@@ -282,11 +528,25 @@ namespace Exam_Invagilation_System.Migrations
 
             modelBuilder.Entity("Exam_Invagilation_System.Models.CheatingReport", b =>
                 {
+                    b.HasOne("Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseCode")
+                        .HasPrincipalKey("CourseCode")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Exam_Invagilation_System.Models.Student", "Student")
                         .WithMany()
                         .HasForeignKey("RegistrationNumber")
                         .HasPrincipalKey("RegistrationNumber")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Exam_Invagilation_System.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomNumber")
+                        .HasPrincipalKey("RoomNumber")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Exam_Invagilation_System.Models.Teacher", "Teacher")
@@ -296,7 +556,38 @@ namespace Exam_Invagilation_System.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("Course");
+
+                    b.Navigation("Room");
+
                     b.Navigation("Student");
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("Exam_Invagilation_System.Models.Duty", b =>
+                {
+                    b.HasOne("Exam_Invagilation_System.Models.Paper", "Paper")
+                        .WithMany()
+                        .HasForeignKey("PaperId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Exam_Invagilation_System.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Exam_Invagilation_System.Models.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Paper");
+
+                    b.Navigation("Room");
 
                     b.Navigation("Teacher");
                 });
@@ -321,6 +612,18 @@ namespace Exam_Invagilation_System.Migrations
                     b.Navigation("Room");
                 });
 
+            modelBuilder.Entity("Exam_Invagilation_System.Models.PaperSummaryCollection", b =>
+                {
+                    b.HasOne("Exam_Invagilation_System.Models.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherEmployeeNumber")
+                        .HasPrincipalKey("TeacherEmployeeNumber")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Teacher");
+                });
+
             modelBuilder.Entity("Exam_Invagilation_System.Models.StudentCourse", b =>
                 {
                     b.HasOne("Course", "Course")
@@ -338,6 +641,34 @@ namespace Exam_Invagilation_System.Migrations
                         .IsRequired();
 
                     b.Navigation("Course");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("SittingArrangement", b =>
+                {
+                    b.HasOne("Exam_Invagilation_System.Models.Paper", "Paper")
+                        .WithMany()
+                        .HasForeignKey("PaperId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Exam_Invagilation_System.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("RegistrationNumber")
+                        .HasPrincipalKey("RegistrationNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Exam_Invagilation_System.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Paper");
+
+                    b.Navigation("Room");
 
                     b.Navigation("Student");
                 });

@@ -1,5 +1,6 @@
 ﻿using Exam_Invagilation_System.Entities;
 using Exam_Invagilation_System.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
@@ -9,6 +10,8 @@ using System.Text.Json;
 
 namespace Exam_Invagilation_System.Controllers
 {
+    [Authorize(AuthenticationSchemes = "MyCookieAuth")]
+
     [Route("InsertStudent")]
     public class InsertStudentController : Controller
     {

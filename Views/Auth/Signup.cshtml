@@ -9,22 +9,40 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Signup Page - Exam_Invagilation_System</title>
 	<link rel="icon" type="image/x-icon" href="~/favicon.ico" asp-append-version="true" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="~/css/_Notification.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+	<!-- Boxicons CSS -->
 	<link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet" />
+
+	
 </head>
 <body>
 	<div class="container">
+		@if (TempData["success"] != null || TempData["error"] != null)
+		{
+			<div class="notification-container">
+				<div class="notification @(TempData["success"] != null ? "notification--success" : "notification--error")">
+					<div class="notification_body">
+						<i class='bx @(TempData["success"] != null ? "bx-check-circle" : "bx-x-circle")'></i>
+						@TempData["success"]
+						@TempData["error"]
+					</div>
+					<div class="notification_progress"></div>
+				</div>
+			</div>
+		}
 		<header>Signup</header>
-		<form>
+		<form method="post" asp-action="Signup" class="form" onsubmit="return showLoader('add')">
 			<div class="field">
 				<div class="input-field">
-					<input type="text" placeholder="Enter your name" class="name" />
+					<input type="text" placeholder="Enter your name" class="name" name="name" />
 				</div>
 			</div>
 
 			<div class="field email-field">
 				<div class="input-field">
-					<input type="email" placeholder="Enter your email" class="email" />
+					<input type="email" placeholder="Enter your email" class="email" name="email" />
 				</div>
 				<span class="error email-error">
 					<i class="bx bx-error-circle error-icon"></i>
@@ -34,7 +52,8 @@
 
 			<div class="field create-password">
 				<div class="input-field">
-					<input type="password"
+					<input type="password" 
+						name="password"
 						   placeholder="Create password"
 						   class="password" />
 					<i class="bx bx-hide show-hide"></i>
@@ -59,9 +78,11 @@
 					<p class="error-text">Password don't match</p>
 				</span>
 			</div>
+
 			<div class="input-field button">
 				<input type="submit" value="Signup" />
 			</div>
+
 			<span class="dont-have-account">Already have an account. &nbsp;<a asp-controller="Auth" asp-action="Login">Login</a></span>
 
 		</form>
@@ -113,18 +134,36 @@
 		}
 
 		form.addEventListener("submit", (e) => {
-			e.preventDefault();
 			checkEmail();
 			createPass();
 			confirmPass();
-			emailInput.addEventListener("keyup", checkEmail);
-			passInput.addEventListener("keyup", createPass);
-			cPassInput.addEventListener("keyup", confirmPass);
 
-			if (!emailField.classList.contains("invalid") && !passField.classList.contains("invalid") && !cPassField.classList.contains("invalid")) {
-					location.href = form.getAttribute("action");
+			if (emailField.classList.contains("invalid") ||
+				passField.classList.contains("invalid") ||
+				cPassField.classList.contains("invalid")) {
+				e.preventDefault(); // ❌ Block only if validation fails
 			}
 		});
+
+
+			function showLoader(action) {
+			let button, loader, buttonText;
+
+			if (action === 'add') {
+				button = document.getElementById("addBtn");
+				loader = document.getElementById("addLoader");
+				buttonText = document.getElementById("addBtnText");
+			}
+
+			loader.classList.remove("d-none");
+			buttonText.textContent = action === 'delete' ? "Deleting..."
+				: action === 'edit' ? "Updating..."
+				: action === 'addExcel' ? "Uploading..."
+				: "Adding...";
+			button.disabled = true;
+
+			return true; // Allow form submission
+		}
 	</script>
 </body>
 </html>

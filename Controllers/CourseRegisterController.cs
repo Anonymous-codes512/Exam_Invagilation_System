@@ -1,5 +1,6 @@
 ﻿using Exam_Invagilation_System.Entities;
 using Exam_Invagilation_System.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
@@ -8,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace Exam_Invagilation_System.Controllers
 {
+    [Authorize(AuthenticationSchemes = "MyCookieAuth")]
+
     [Route("CourseRegister")]
     public class CourseRegisterController : Controller
     {
@@ -107,8 +110,9 @@ namespace Exam_Invagilation_System.Controllers
                     {
                         var RegistrationNumber = worksheet.Cells[row, 1].Text.Trim();
                         var CourseCode = worksheet.Cells[row, 2].Text.Trim();
+                        var CourseAttendance = worksheet.Cells[row, 3].Text.Trim();
 
-                        if (string.IsNullOrEmpty(RegistrationNumber) || string.IsNullOrEmpty(CourseCode))
+                        if (string.IsNullOrEmpty(RegistrationNumber) || string.IsNullOrEmpty(CourseCode) || string.IsNullOrEmpty(CourseCode))
                         {
                             continue; // Skip invalid rows
                         }
@@ -129,7 +133,8 @@ namespace Exam_Invagilation_System.Controllers
                             var newStudentCourse = new StudentCourse
                             {
                                 RegistrationNumber = RegistrationNumber,
-                                CourseCode = CourseCode
+                                CourseCode = CourseCode,
+                                CourseAttendance = CourseAttendance
                             };
 
                             await _db.StudentCourses.AddAsync(newStudentCourse);

@@ -1,55 +1,58 @@
 ﻿using Exam_Invagilation_System.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 
+builder.Services.AddAuthentication("MyCookieAuth")
+    .AddCookie("MyCookieAuth", options =>
+    {
+        options.LoginPath = "/Auth/AccessDenied"; // Force all unauthorized/unauthenticated to same page
+        options.AccessDeniedPath = "/Auth/AccessDenied";
 
-// Configure the database context
+    });
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
-           .EnableSensitiveDataLogging();  // Enable sensitive data logging here
+           .EnableSensitiveDataLogging();
 });
-
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFlutterApp",
         builder => builder
-            .AllowAnyOrigin() // Later: use specific IP or domain
+            .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod());
 });
 
 var app = builder.Build();
 
-// ✅ Properly resolve and use AppDbContext for database seeding
-//using (var scope = app.Services.CreateScope())
-//{
-//    Console.WriteLine("Seeding database...");
-//    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>(); // Fix
-//    DBSeeder.SeedDatabase(dbContext);
-//    Console.WriteLine("Database seeded successfully");
-//}
-
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+else
+{
+    app.UseDeveloperExceptionPage();
+}
+
+// ✅ Add this line to handle 404s
+app.UseStatusCodePagesWithReExecute("/Auth/NotFound");
+
 
 app.UseCors("AllowFlutterApp");
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseDeveloperExceptionPage();
+
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
