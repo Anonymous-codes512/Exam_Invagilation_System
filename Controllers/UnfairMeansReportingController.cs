@@ -42,5 +42,30 @@ namespace Exam_Invagilation_System.Controllers
 
             return View(model);
         }
+
+        [HttpPost("AcceptReport")]
+        public IActionResult AcceptReport(int id)
+        {
+            var caseItem = _db.CheatingReports.Find(id);
+            if (caseItem != null)
+            {
+                caseItem.Status = "Accepted";
+                _db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost("DenyReport")]
+        public IActionResult DenyReport(int id)
+        {
+            var caseItem = _db.CheatingReports.Find(id);
+            if (caseItem != null)
+            {
+                caseItem.Status = "Denied";
+                _db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
     }
 }

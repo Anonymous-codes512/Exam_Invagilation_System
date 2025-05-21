@@ -18,6 +18,8 @@ namespace Exam_Invagilation_System.API
         public async Task<IActionResult> MarkStudentAttendance([FromBody] StudentAttendanceRequest request)
         {
             Console.WriteLine("....");
+            Console.WriteLine(request.RegistrationNumber);
+            Console.WriteLine(request.TeacherEmployeeNumber);
 
             // Extract incoming data
             DateTime fullDateTime = request.DateAndTime;
@@ -206,7 +208,7 @@ namespace Exam_Invagilation_System.API
                     RegistrationNumber = student.RegistrationNumber,
                     TeacherEmployeeNumber = student.TeacherEmployeeNumber,
                     RoomNumber = student.RoomNumber,
-                    PaperId = student.PaperId,
+                    PaperId = (int)student.PaperId,
                     Date = DateOnly.Parse(student.Date),
                     TimeSlot = student.TimeSlot,
                     Status = student.AttendanceStatus
@@ -223,16 +225,18 @@ namespace Exam_Invagilation_System.API
 
     }
     public class StudentAttendanceRequest
-{
-    public required string RegistrationNumber { get; set; }
-    public required string TeacherEmployeeNumber { get; set; }
-    public required string RoomNumber { get; set; }
-    public required int PaperId { get; set; }
-    public required string Date { get; set; } // Keep it string if you're sending it as "2025-04-20"
-    public required string TimeSlot { get; set; }
-    public DateTime DateAndTime { get; set; }
-    public required string AttendanceStatus { get; set; }
-}
+    {
+        public required string RegistrationNumber { get; set; }
+        public required string TeacherEmployeeNumber { get; set; }
+        public required DateTime DateAndTime { get; set; }
+
+        public string? RoomNumber { get; set; }
+        public int? PaperId { get; set; }
+        public string? Date { get; set; }
+        public string? TimeSlot { get; set; }
+        public string? AttendanceStatus { get; set; }
+    }
+
     public class StudentAttendanceBatchRequest
     {
         public required List<StudentAttendanceRequest> Students { get; set; }

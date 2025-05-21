@@ -1,0 +1,1070 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exam Invigilation System - Enhanced Documentation</title>
+<style>body{font-family:Arial,sans-serif;margin:20px;}h1,h2,h3,h4{color:#2a2a2a;}
+pre{background:#f4f4f4;padding:10px;overflow-x:auto;}code{background:#eee;padding:2px 4px;font-family:Consolas,monospace;}
+.file-section{margin-bottom:40px;border-bottom:1px solid #ccc;padding-bottom:20px;}
+.folder-summary{margin-left:15px;font-style:italic;color:#444;margin-bottom:12px;}
+.file-description{margin-left:20px;color:#333;font-style:italic;margin-bottom:15px;}
+.class-section{margin-left:20px;margin-bottom:20px;}
+.member{margin-left:40px;margin-bottom:10px;}
+.member-type{font-weight:bold;}
+.description{margin-left:40px;color:#555;font-style:italic;margin-bottom:8px;}
+.view-section{margin-left:20px;margin-bottom:10px;}
+</style></head><body>
+<h1>Exam Invigilation System - Enhanced Documentation</h1>
+<h2>Code Files</h2>
+<h2>API Folder</h2>
+<div class="folder-summary">Contains API controllers responsible for handling HTTP requests related to various entities such as students and teachers. These controllers serve data to frontend or external clients.</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/API/StudentController.cs</h3>
+<div class="file-description">API controller managing backend logic for resource handling and requests.</div>
+<div class="class-section"><h4>Class <code>StudentController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>StudentController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext context</code>
+</div>
+<div class="description">This method <strong>StudentController</strong> handles the studentcontroller operation. Parameters: AppDbContext context.</div>
+<div class="member"><span class="member-type">Method</span>: <code>MarkStudentAttendance</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>[FromBody] StudentAttendanceRequest request</code>
+</div>
+<div class="description">This method <strong>MarkStudentAttendance</strong> marks or updates status related to studentattendance. Parameters: [FromBody] StudentAttendanceRequest request.</div>
+<div class="member"><span class="member-type">Field</span>: <code>CourseAttendance</code>
+ (<code>double</code>)
+</div>
+<div class="description">This method <strong>CourseAttendance</strong> handles the courseattendance operation.</div>
+<div class="member"><span class="member-type">Method</span>: <code>fetchStudentsFromRoom</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>[FromQuery] string teacherEmployeeNumber, [FromQuery] string dateAndTime</code>
+</div>
+<div class="description">This method <strong>fetchStudentsFromRoom</strong> fetches or loads relevant data or records related to studentsfromroom. Parameters: [FromQuery] string teacherEmployeeNumber, [FromQuery] string dateAndTime.</div>
+<div class="member"><span class="member-type">Method</span>: <code>SubmitAttendance</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>[FromBody] StudentAttendanceBatchRequest request</code>
+</div>
+<div class="description">This method <strong>SubmitAttendance</strong> handles submission of attendance data or requests. Parameters: [FromBody] StudentAttendanceBatchRequest request.</div>
+</div>
+<div class="class-section"><h4>Class <code>StudentAttendanceRequest</code></h4>
+<div class="member"><span class="member-type">Property</span>: <code>DateAndTime</code>
+ (<code>DateTime</code>)
+</div>
+<div class="description">This method <strong>DateAndTime</strong> handles the dateandtime operation.</div>
+</div>
+</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/API/TeacherController.cs</h3>
+<div class="file-description">API controller managing backend logic for resource handling and requests.</div>
+<div class="class-section"><h4>Class <code>TeacherController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>TeacherController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext context</code>
+</div>
+<div class="description">This method <strong>TeacherController</strong> handles the teachercontroller operation. Parameters: AppDbContext context.</div>
+<div class="member"><span class="member-type">Method</span>: <code>MarkAttendance</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>[FromBody] TeacherAttendanceRequest request</code>
+</div>
+<div class="description">This method <strong>MarkAttendance</strong> marks or updates status related to attendance. Parameters: [FromBody] TeacherAttendanceRequest request.</div>
+<div class="member"><span class="member-type">Method</span>: <code>SubmitUnfairMeansReport</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>[FromBody] UnfairMeansReport report</code>
+</div>
+<div class="description">This method <strong>SubmitUnfairMeansReport</strong> handles submission of unfairmeansreport data or requests. Parameters: [FromBody] UnfairMeansReport report.</div>
+<div class="member"><span class="member-type">Method</span>: <code>SubmitPaperCollection</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>[FromBody] PaperCollection report</code>
+</div>
+<div class="description">This method <strong>SubmitPaperCollection</strong> handles submission of papercollection data or requests. Parameters: [FromBody] PaperCollection report.</div>
+</div>
+<div class="class-section"><h4>Class <code>TeacherAttendanceRequest</code></h4>
+<div class="member"><span class="member-type">Property</span>: <code>teacherEmployeeNumber</code>
+ (<code>string</code>)
+</div>
+<div class="description">This method <strong>teacherEmployeeNumber</strong> handles the teacheremployeenumber operation.</div>
+</div>
+<div class="class-section"><h4>Class <code>UnfairMeansReport</code></h4>
+<div class="member"><span class="member-type">Property</span>: <code>studentRegistration</code>
+ (<code>string</code>)
+</div>
+<div class="description">This method <strong>studentRegistration</strong> handles the studentregistration operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>teacherEmployeeNumber</code>
+ (<code>string</code>)
+</div>
+<div class="description">This method <strong>teacherEmployeeNumber</strong> handles the teacheremployeenumber operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>courseCode</code>
+ (<code>string</code>)
+</div>
+<div class="description">This method <strong>courseCode</strong> handles the coursecode operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>date</code>
+ (<code>DateTime</code>)
+</div>
+<div class="description">This method <strong>date</strong> handles the date operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>unfairType</code>
+ (<code>string</code>)
+</div>
+<div class="description">This method <strong>unfairType</strong> handles the unfairtype operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>otherDetails</code>
+ (<code>string</code>)
+</div>
+<div class="description">This method <strong>otherDetails</strong> handles the otherdetails operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>incidentDetails</code>
+ (<code>string</code>)
+</div>
+<div class="description">This method <strong>incidentDetails</strong> handles the incidentdetails operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>roomNumber</code>
+ (<code>string</code>)
+</div>
+<div class="description">This method <strong>roomNumber</strong> handles the roomnumber operation.</div>
+</div>
+<div class="class-section"><h4>Class <code>PaperCollection</code></h4>
+<div class="member"><span class="member-type">Property</span>: <code>teacherNumber</code>
+ (<code>string</code>)
+</div>
+<div class="description">This method <strong>teacherNumber</strong> handles the teachernumber operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>selectedPaper</code>
+ (<code>string</code>)
+</div>
+<div class="description">This method <strong>selectedPaper</strong> handles the selectedpaper operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>totalPapers</code>
+ (<code>int</code>)
+</div>
+<div class="description">This method <strong>totalPapers</strong> handles the totalpapers operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>numberOfPapers</code>
+ (<code>int</code>)
+</div>
+<div class="description">This method <strong>numberOfPapers</strong> handles the numberofpapers operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>collectorName</code>
+ (<code>string</code>)
+</div>
+<div class="description">This method <strong>collectorName</strong> handles the collectorname operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>roomNumber</code>
+ (<code>string</code>)
+</div>
+<div class="description">This method <strong>roomNumber</strong> handles the roomnumber operation.</div>
+</div>
+</div>
+<h2>Controllers Folder</h2>
+<div class="folder-summary">MVC Controllers responsible for managing UI flow, business logic, and interactions between views and models.</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/Controllers/AttendanceController.cs</h3>
+<div class="file-description">MVC controller managing UI routing and business logic for related views.</div>
+<div class="class-section"><h4>Class <code>AttendanceController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>AttendanceController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext db</code>
+</div>
+<div class="description">This method <strong>AttendanceController</strong> handles the attendancecontroller operation. Parameters: AppDbContext db.</div>
+<div class="member"><span class="member-type">Method</span>: <code>Index</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>int pageNumber = 1, int pageSize = 10</code>
+</div>
+<div class="description">This method <strong>Index</strong> handles the index operation. Parameters: int pageNumber = 1, int pageSize = 10.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+ — Parameters: <code>model</code>
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation. Parameters: model.</div>
+</div>
+</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/Controllers/AuthController.cs</h3>
+<div class="file-description">MVC controller managing UI routing and business logic for related views.</div>
+<div class="class-section"><h4>Class <code>AuthController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>AuthController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext db</code>
+</div>
+<div class="description">This method <strong>AuthController</strong> handles the authcontroller operation. Parameters: AppDbContext db.</div>
+<div class="member"><span class="member-type">Method</span>: <code>Login</code>
+ (<code>IActionResult</code>)
+</div>
+<div class="description">This method <strong>Login</strong> handles the login operation.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation.</div>
+<div class="member"><span class="member-type">Method</span>: <code>Login</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>string email, string password</code>
+</div>
+<div class="description">This method <strong>Login</strong> handles the login operation. Parameters: string email, string password.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Dashboard", "Home"</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Dashboard", "Home".</div>
+<div class="member"><span class="member-type">Method</span>: <code>Signup</code>
+ (<code>IActionResult</code>)
+</div>
+<div class="description">This method <strong>Signup</strong> handles the signup operation.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation.</div>
+<div class="member"><span class="member-type">Method</span>: <code>Signup</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>string email, string password, string name</code>
+</div>
+<div class="description">This method <strong>Signup</strong> handles the signup operation. Parameters: string email, string password, string name.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Login"</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Login".</div>
+<div class="member"><span class="member-type">Method</span>: <code>Logout</code>
+ (<code>Task<IActionResult></code>)
+</div>
+<div class="description">This method <strong>Logout</strong> handles the logout operation.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Login"</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Login".</div>
+<div class="member"><span class="member-type">Method</span>: <code>AccessDenied</code>
+ (<code>IActionResult</code>)
+</div>
+<div class="description">This method <strong>AccessDenied</strong> handles the accessdenied operation.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation.</div>
+</div>
+</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/Controllers/CourseRegisterController.cs</h3>
+<div class="file-description">MVC controller managing UI routing and business logic for related views.</div>
+<div class="class-section"><h4>Class <code>CourseRegisterController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>CourseRegisterController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext db</code>
+</div>
+<div class="description">This method <strong>CourseRegisterController</strong> handles the courseregistercontroller operation. Parameters: AppDbContext db.</div>
+<div class="member"><span class="member-type">Method</span>: <code>StudentCourses</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>int pageNumber = 1, int pageSize = 10</code>
+</div>
+<div class="description">This method <strong>StudentCourses</strong> handles the studentcourses operation. Parameters: int pageNumber = 1, int pageSize = 10.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+ — Parameters: <code>model</code>
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation. Parameters: model.</div>
+<div class="member"><span class="member-type">Method</span>: <code>UploadStudentCoursesExcel</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>IFormFile file</code>
+</div>
+<div class="description">This method <strong>UploadStudentCoursesExcel</strong> handles the uploadstudentcoursesexcel operation. Parameters: IFormFile file.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"StudentCourses", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "StudentCourses", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"StudentCourses", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "StudentCourses", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"StudentCourses", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "StudentCourses", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"StudentCourses", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "StudentCourses", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>DeleteStudentCourse</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>string RegistrationNumber, string CourseCode</code>
+</div>
+<div class="description">This method <strong>DeleteStudentCourse</strong> deletes or removes specified data or entries. Parameters: string RegistrationNumber, string CourseCode.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"StudentCourses", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "StudentCourses", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"StudentCourses", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "StudentCourses", new { pageNumber = 1, pageSize = 10 }.</div>
+</div>
+</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/Controllers/DateSheetController.cs</h3>
+<div class="file-description">MVC controller managing UI routing and business logic for related views.</div>
+<div class="class-section"><h4>Class <code>DateSheetController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>DateSheetController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext db</code>
+</div>
+<div class="description">This method <strong>DateSheetController</strong> handles the datesheetcontroller operation. Parameters: AppDbContext db.</div>
+<div class="member"><span class="member-type">Method</span>: <code>DateSheet</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>int pageNumber = 1, int pageSize = 10</code>
+</div>
+<div class="description">This method <strong>DateSheet</strong> handles the datesheet operation. Parameters: int pageNumber = 1, int pageSize = 10.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+ — Parameters: <code>model</code>
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation. Parameters: model.</div>
+<div class="member"><span class="member-type">Method</span>: <code>AddDateSheet</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>Paper paper, string StartTime, string EndTime</code>
+</div>
+<div class="description">This method <strong>AddDateSheet</strong> handles the adddatesheet operation. Parameters: Paper paper, string StartTime, string EndTime.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>UploadDateSheetExcel</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>IFormFile file</code>
+</div>
+<div class="description">This method <strong>UploadDateSheetExcel</strong> handles the uploaddatesheetexcel operation. Parameters: IFormFile file.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Field</span>: <code>examDate</code>
+ (<code>DateOnly</code>)
+</div>
+<div class="description">This method <strong>examDate</strong> handles the examdate operation.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>EditDateSheet</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>Paper paper</code>
+</div>
+<div class="description">This method <strong>EditDateSheet</strong> handles the editdatesheet operation. Parameters: Paper paper.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>DeleteDateSheet</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>int paperId</code>
+</div>
+<div class="description">This method <strong>DeleteDateSheet</strong> deletes or removes specified data or entries. Parameters: int paperId.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"DateSheet", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "DateSheet", new { pageNumber = 1, pageSize = 10 }.</div>
+</div>
+</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/Controllers/HomeController.cs</h3>
+<div class="file-description">MVC controller managing UI routing and business logic for related views.</div>
+<div class="class-section"><h4>Class <code>HomeController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>HomeController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext context</code>
+</div>
+<div class="description">This method <strong>HomeController</strong> handles the homecontroller operation. Parameters: AppDbContext context.</div>
+<div class="member"><span class="member-type">Method</span>: <code>Dashboard</code>
+ (<code>IActionResult</code>)
+</div>
+<div class="description">This method <strong>Dashboard</strong> handles the dashboard operation.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation.</div>
+</div>
+</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/Controllers/InsertCourseController.cs</h3>
+<div class="file-description">MVC controller managing UI routing and business logic for related views.</div>
+<div class="class-section"><h4>Class <code>InsertCourseController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>InsertCourseController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext db</code>
+</div>
+<div class="description">This method <strong>InsertCourseController</strong> handles the insertcoursecontroller operation. Parameters: AppDbContext db.</div>
+<div class="member"><span class="member-type">Method</span>: <code>Course</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>int pageNumber = 1, int pageSize = 10</code>
+</div>
+<div class="description">This method <strong>Course</strong> handles the course operation. Parameters: int pageNumber = 1, int pageSize = 10.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+ — Parameters: <code>model</code>
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation. Parameters: model.</div>
+<div class="member"><span class="member-type">Method</span>: <code>AddCourse</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>Course course</code>
+</div>
+<div class="description">This method <strong>AddCourse</strong> handles the addcourse operation. Parameters: Course course.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Course", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Course", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Course", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Course", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Course", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Course", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>UploadCourseExcel</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>IFormFile file</code>
+</div>
+<div class="description">This method <strong>UploadCourseExcel</strong> handles the uploadcourseexcel operation. Parameters: IFormFile file.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Course", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Course", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Course", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Course", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Course", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Course", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Course", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Course", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>EditCourse</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>Course course</code>
+</div>
+<div class="description">This method <strong>EditCourse</strong> handles the editcourse operation. Parameters: Course course.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Course", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Course", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Course", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Course", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Course", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Course", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Course", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Course", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>DeleteCourse</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>string CourseCode</code>
+</div>
+<div class="description">This method <strong>DeleteCourse</strong> deletes or removes specified data or entries. Parameters: string CourseCode.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Course", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Course", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Course", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Course", new { pageNumber = 1, pageSize = 10 }.</div>
+</div>
+</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/Controllers/InsertRoomController.cs</h3>
+<div class="file-description">MVC controller managing UI routing and business logic for related views.</div>
+<div class="class-section"><h4>Class <code>InsertRoomController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>InsertRoomController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext db</code>
+</div>
+<div class="description">This method <strong>InsertRoomController</strong> handles the insertroomcontroller operation. Parameters: AppDbContext db.</div>
+<div class="member"><span class="member-type">Method</span>: <code>Room</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>int pageNumber = 1, int pageSize = 10</code>
+</div>
+<div class="description">This method <strong>Room</strong> handles the room operation. Parameters: int pageNumber = 1, int pageSize = 10.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+ — Parameters: <code>model</code>
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation. Parameters: model.</div>
+<div class="member"><span class="member-type">Method</span>: <code>AddRoom</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>Room room</code>
+</div>
+<div class="description">This method <strong>AddRoom</strong> handles the addroom operation. Parameters: Room room.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Room", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Room", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Room", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Room", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Room", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Room", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>UploadRoomExcel</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>IFormFile file</code>
+</div>
+<div class="description">This method <strong>UploadRoomExcel</strong> handles the uploadroomexcel operation. Parameters: IFormFile file.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Room", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Room", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Room", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Room", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Room", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Room", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Room", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Room", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>EditRoom</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>Room room</code>
+</div>
+<div class="description">This method <strong>EditRoom</strong> handles the editroom operation. Parameters: Room room.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Room", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Room", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Room", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Room", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Room", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Room", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Room", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Room", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>DeleteRoom</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>string RoomNumber</code>
+</div>
+<div class="description">This method <strong>DeleteRoom</strong> deletes or removes specified data or entries. Parameters: string RoomNumber.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Room", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Room", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Room", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Room", new { pageNumber = 1, pageSize = 10 }.</div>
+</div>
+</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/Controllers/InsertStudentController.cs</h3>
+<div class="file-description">MVC controller managing UI routing and business logic for related views.</div>
+<div class="class-section"><h4>Class <code>InsertStudentController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>InsertStudentController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext db</code>
+</div>
+<div class="description">This method <strong>InsertStudentController</strong> handles the insertstudentcontroller operation. Parameters: AppDbContext db.</div>
+<div class="member"><span class="member-type">Method</span>: <code>Student</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>int pageNumber = 1, int pageSize = 10</code>
+</div>
+<div class="description">This method <strong>Student</strong> handles the student operation. Parameters: int pageNumber = 1, int pageSize = 10.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+ — Parameters: <code>model</code>
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation. Parameters: model.</div>
+<div class="member"><span class="member-type">Method</span>: <code>AddStudent</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>Student student</code>
+</div>
+<div class="description">This method <strong>AddStudent</strong> handles the addstudent operation. Parameters: Student student.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>UploadExcel</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>IFormFile file</code>
+</div>
+<div class="description">This method <strong>UploadExcel</strong> handles the uploadexcel operation. Parameters: IFormFile file.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>EditStudent</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>Student student</code>
+</div>
+<div class="description">This method <strong>EditStudent</strong> handles the editstudent operation. Parameters: Student student.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>DeleteStudent</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>string registrationNumber</code>
+</div>
+<div class="description">This method <strong>DeleteStudent</strong> deletes or removes specified data or entries. Parameters: string registrationNumber.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Student", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Student", new { pageNumber = 1, pageSize = 10 }.</div>
+</div>
+</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/Controllers/InsertTeacherController.cs</h3>
+<div class="file-description">MVC controller managing UI routing and business logic for related views.</div>
+<div class="class-section"><h4>Class <code>InsertTeacherController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>InsertTeacherController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext db</code>
+</div>
+<div class="description">This method <strong>InsertTeacherController</strong> handles the insertteachercontroller operation. Parameters: AppDbContext db.</div>
+<div class="member"><span class="member-type">Method</span>: <code>Teacher</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>int pageNumber = 1, int pageSize = 10</code>
+</div>
+<div class="description">This method <strong>Teacher</strong> handles the teacher operation. Parameters: int pageNumber = 1, int pageSize = 10.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+ — Parameters: <code>model</code>
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation. Parameters: model.</div>
+<div class="member"><span class="member-type">Method</span>: <code>AddTeacher</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>Teacher teacher</code>
+</div>
+<div class="description">This method <strong>AddTeacher</strong> handles the addteacher operation. Parameters: Teacher teacher.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Teacher", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Teacher", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Teacher", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Teacher", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Teacher", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Teacher", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>UploadTeacherExcel</code>
+ (<code>Task<IActionResult></code>)
+ — Parameters: <code>IFormFile file</code>
+</div>
+<div class="description">This method <strong>UploadTeacherExcel</strong> handles the uploadteacherexcel operation. Parameters: IFormFile file.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Teacher", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Teacher", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Teacher", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Teacher", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Teacher", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Teacher", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Teacher", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Teacher", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>EditTeacher</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>Teacher teacher</code>
+</div>
+<div class="description">This method <strong>EditTeacher</strong> handles the editteacher operation. Parameters: Teacher teacher.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Teacher", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Teacher", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Teacher", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Teacher", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Teacher", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Teacher", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Teacher", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Teacher", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>DeleteTeacher</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>string TeacherEmployeeNumber</code>
+</div>
+<div class="description">This method <strong>DeleteTeacher</strong> deletes or removes specified data or entries. Parameters: string TeacherEmployeeNumber.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Teacher", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Teacher", new { pageNumber = 1, pageSize = 10 }.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Teacher", new { pageNumber = 1, pageSize = 10 }</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Teacher", new { pageNumber = 1, pageSize = 10 }.</div>
+</div>
+</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/Controllers/PaperSummaryController.cs</h3>
+<div class="file-description">MVC controller managing UI routing and business logic for related views.</div>
+<div class="class-section"><h4>Class <code>PaperSummaryController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>PaperSummaryController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext db</code>
+</div>
+<div class="description">This method <strong>PaperSummaryController</strong> handles the papersummarycontroller operation. Parameters: AppDbContext db.</div>
+<div class="member"><span class="member-type">Method</span>: <code>Index</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>int pageNumber = 1, int pageSize = 10</code>
+</div>
+<div class="description">This method <strong>Index</strong> handles the index operation. Parameters: int pageNumber = 1, int pageSize = 10.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+ — Parameters: <code>model</code>
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation. Parameters: model.</div>
+</div>
+</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/Controllers/SeatingPlanController.cs</h3>
+<div class="file-description">MVC controller managing UI routing and business logic for related views.</div>
+<div class="class-section"><h4>Class <code>SeatingPlanController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>SeatingPlanController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext db</code>
+</div>
+<div class="description">This method <strong>SeatingPlanController</strong> handles the seatingplancontroller operation. Parameters: AppDbContext db.</div>
+<div class="member"><span class="member-type">Method</span>: <code>Index</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>int pageNumber = 1, int pageSize = 30</code>
+</div>
+<div class="description">This method <strong>Index</strong> handles the index operation. Parameters: int pageNumber = 1, int pageSize = 30.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+ — Parameters: <code>model</code>
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation. Parameters: model.</div>
+<div class="member"><span class="member-type">Method</span>: <code>GenerateSeatingPlan</code>
+ (<code>IActionResult</code>)
+</div>
+<div class="description">This method <strong>GenerateSeatingPlan</strong> handles the generateseatingplan operation.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Index"</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Index".</div>
+<div class="member"><span class="member-type">Field</span>: <code>col</code>
+ (<code>return</code>)
+</div>
+<div class="description">This method <strong>col</strong> handles the col operation.</div>
+<div class="member"><span class="member-type">Field</span>: <code>col</code>
+ (<code>return</code>)
+</div>
+<div class="description">This method <strong>col</strong> handles the col operation.</div>
+</div>
+</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/Controllers/TeacherDutyController.cs</h3>
+<div class="file-description">MVC controller managing UI routing and business logic for related views.</div>
+<div class="class-section"><h4>Class <code>TeacherDutyController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>TeacherDutyController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext db</code>
+</div>
+<div class="description">This method <strong>TeacherDutyController</strong> handles the teacherdutycontroller operation. Parameters: AppDbContext db.</div>
+<div class="member"><span class="member-type">Method</span>: <code>Index</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>int pageNumber = 1, int pageSize = 10</code>
+</div>
+<div class="description">This method <strong>Index</strong> handles the index operation. Parameters: int pageNumber = 1, int pageSize = 10.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+ — Parameters: <code>model</code>
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation. Parameters: model.</div>
+<div class="member"><span class="member-type">Method</span>: <code>GenerateTeacherDuties</code>
+ (<code>Task<IActionResult></code>)
+</div>
+<div class="description">This method <strong>GenerateTeacherDuties</strong> handles the generateteacherduties operation.</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Index"</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Index".</div>
+<div class="member"><span class="member-type">Method</span>: <code>RedirectToAction</code>
+ (<code>return</code>)
+ — Parameters: <code>"Index"</code>
+</div>
+<div class="description">This method <strong>RedirectToAction</strong> handles the redirecttoaction operation. Parameters: "Index".</div>
+</div>
+</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/Controllers/UnfairMeansReportingController.cs</h3>
+<div class="file-description">MVC controller managing UI routing and business logic for related views.</div>
+<div class="class-section"><h4>Class <code>UnfairMeansReportingController</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>UnfairMeansReportingController</code>
+ (<code>public</code>)
+ — Parameters: <code>AppDbContext db</code>
+</div>
+<div class="description">This method <strong>UnfairMeansReportingController</strong> handles the unfairmeansreportingcontroller operation. Parameters: AppDbContext db.</div>
+<div class="member"><span class="member-type">Method</span>: <code>Index</code>
+ (<code>IActionResult</code>)
+ — Parameters: <code>int pageNumber = 1, int pageSize = 10</code>
+</div>
+<div class="description">This method <strong>Index</strong> handles the index operation. Parameters: int pageNumber = 1, int pageSize = 10.</div>
+<div class="member"><span class="member-type">Method</span>: <code>View</code>
+ (<code>return</code>)
+ — Parameters: <code>model</code>
+</div>
+<div class="description">This method <strong>View</strong> handles the view operation. Parameters: model.</div>
+</div>
+</div>
+<h2>Entities Folder</h2>
+<div class="folder-summary">Contains the DbContext and database related entity classes managing database connection and ORM mapping.</div>
+<div class="file-section"><h3>File: WEB/Exam_Invigilation_System/Entities/AppDbContext.cs</h3>
+<div class="file-description">Database context class managing entity models and database connections.</div>
+<div class="class-section"><h4>Class <code>AppDbContext</code></h4>
+<div class="member"><span class="member-type">Method</span>: <code>AppDbContext</code>
+ (<code>public</code>)
+ — Parameters: <code>DbContextOptions<AppDbContext> options</code>
+</div>
+<div class="description">This method <strong>AppDbContext</strong> handles the appdbcontext operation. Parameters: DbContextOptions<AppDbContext> options.</div>
+<div class="member"><span class="member-type">Property</span>: <code>UserAccounts</code>
+ (<code>DbSet<UserAccount></code>)
+</div>
+<div class="description">This method <strong>UserAccounts</strong> handles the useraccounts operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>Students</code>
+ (<code>DbSet<Student></code>)
+</div>
+<div class="description">This method <strong>Students</strong> handles the students operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>StudentCourses</code>
+ (<code>DbSet<StudentCourse></code>)
+</div>
+<div class="description">This method <strong>StudentCourses</strong> handles the studentcourses operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>Courses</code>
+ (<code>DbSet<Course></code>)
+</div>
+<div class="description">This method <strong>Courses</strong> handles the courses operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>CheatingReports</code>
+ (<code>DbSet<CheatingReport></code>)
+</div>
+<div class="description">This method <strong>CheatingReports</strong> handles the cheatingreports operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>Teachers</code>
+ (<code>DbSet<Teacher></code>)
+</div>
+<div class="description">This method <strong>Teachers</strong> handles the teachers operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>Rooms</code>
+ (<code>DbSet<Room></code>)
+</div>
+<div class="description">This method <strong>Rooms</strong> handles the rooms operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>Attendances</code>
+ (<code>DbSet<Attendance></code>)
+</div>
+<div class="description">This method <strong>Attendances</strong> handles the attendances operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>Duties</code>
+ (<code>DbSet<Duty></code>)
+</div>
+<div class="description">This method <strong>Duties</strong> handles the duties operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>Papers</code>
+ (<code>DbSet<Paper></code>)
+</div>
+<div class="description">This method <strong>Papers</strong> handles the papers operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>SittingArrangements</code>
+ (<code>DbSet<SittingArrangement></code>)
+</div>
+<div class="description">This method <strong>SittingArrangements</strong> handles the sittingarrangements operation.</div>
+<div class="member"><span class="member-type">Property</span>: <code>PaperSummaryCollections</code>
+ (<code>DbSet<PaperSummaryCollection></code>)
+</div>
+<div class="description">This method <strong>PaperSummaryCollections</strong> handles the papersummarycollections operation.</div>
+</div>
+</div>
+<h2>Views</h2>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/Attendance/Index.cshtml</code> — <em>Attendance overview and marking page</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/Auth/AccessDenied.cshtml</code> — <em>Page shown when user lacks permission</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/Auth/Login.cshtml</code> — <em>Login page for user authentication</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/Auth/NotFound.cshtml</code> — <em>Page shown for 404 not found errors</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/Auth/Signup.cshtml</code> — <em>User registration/signup page</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/CourseRegister/StudentCourses.cshtml</code> — <em>Student course registration page</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/DateSheet/DateSheet.cshtml</code> — <em>Date sheet (exam schedule) display page</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/Home/Dashboard.cshtml</code> — <em>User dashboard after login</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/Home/Index.cshtml</code> — <em>Landing or main homepage</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/Home/Privacy.cshtml</code> — <em>Privacy policy page</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/InsertCourse/Course.cshtml</code> — <em>Form page to insert or edit course details</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/InsertRoom/Room.cshtml</code> — <em>Form page to insert or edit room details</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/InsertStudent/Student.cshtml</code> — <em>Form page to insert or edit student details</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/InsertTeacher/Teacher.cshtml</code> — <em>Form page to insert or edit teacher details</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/PaperSummary/Index.cshtml</code> — <em>Summary page for exam papers</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/SeatingPlan/Index.cshtml</code> — <em>Seating arrangement overview page</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/Shared/Error.cshtml</code> — <em>Generic error display page</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/Shared/Layout.cshtml</code> — <em>View page for Shared section, file Layout.cshtml</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/Shared/_Layout.cshtml</code> — <em>Main shared layout template for pages</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/Shared/_Notification.cshtml</code> — <em>Partial for notification messages</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/Shared/_ValidationScriptsPartial.cshtml</code> — <em>Partial for validation scripts</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/TeacherDuty/Index.cshtml</code> — <em>Teacher duty scheduling page</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/UnfairMeansReporting/Index.cshtml</code> — <em>Page for reporting exam malpractice</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/_ViewImports.cshtml</code> — <em>View imports for Razor components</em></div>
+<div class="view-section"><code>WEB/Exam_Invigilation_System/Views/_ViewStart.cshtml</code> — <em>Razor view start file setting layout</em></div>
+</body></html>

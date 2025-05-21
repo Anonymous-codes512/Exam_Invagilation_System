@@ -25,33 +25,53 @@
 
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table" id="unfairMeansReportingTable">
-                <thead>
+            <table class="table table-bordered table-hover align-middle" id="unfairMeansReportingTable">
+                <thead class="table-light">
                     <tr>
-                        <th>Student Registration #</th>
+                        <th>Student Reg #</th>
                         <th>Student Name</th>
                         <th>Teacher Name</th>
-                        <th>Room Number</th>
+                        <th>Room No.</th>
                         <th>Paper</th>
-                        <th>Date</th>
-                        <th>Time Slot</th>
+                        <th class="text-nowrap">Date</th>
+                        <th class="text-nowrap">Time Slot</th>
                         <th>Unfair Type</th>
                         <th>Description</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var uc in Model.UnfairCases)
                     {
                         <tr>
-                            <td>@uc.RegistrationNumber</td>
+                            <td class="text-nowrap">@uc.RegistrationNumber</td>
                             <td>@uc.Student.StudentName</td>
                             <td>@uc.Teacher.TeacherName</td>
-                            <td>@uc.RoomNumber</td>
+                            <td class="text-nowrap">@uc.RoomNumber</td>
                             <td>@uc.Course.CourseCode - @uc.Course.CourseName</td>
-                            <td>@uc.Date</td>
-                            <td>@uc.TimeSlot</td>
+                            <td class="text-nowrap">@uc.Date.ToShortDateString()</td>
+                            <td class="text-nowrap">@uc.TimeSlot</td>
                             <td>@uc.UnfairType</td>
-                            <td>@uc.IncidentDetails</td>
+                            <td class="truncate-text" title="@uc.IncidentDetails">@uc.IncidentDetails</td>
+                            <td>@uc.Status</td>
+                            <td>
+                                @if (uc.Status == "Pending")
+                                {
+                                    <form method="post" asp-controller="UnfairMeansReporting" asp-action="AcceptReport" style="display:inline;">
+                                        <input type="hidden" name="id" value="@uc.CheatingReportId" />
+                                        <button type="submit" class="btn btn-success btn-sm" title="Accept">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                        </button>
+                                    </form>
+                                    <form method="post" asp-controller="UnfairMeansReporting" asp-action="DenyReport" style="display:inline;">
+                                        <input type="hidden" name="id" value="@uc.CheatingReportId" />
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Deny">
+                                            <i class="bi bi-x-circle-fill"></i>
+                                        </button>
+                                    </form>
+                                }
+                            </td>
                         </tr>
                     }
                 </tbody>

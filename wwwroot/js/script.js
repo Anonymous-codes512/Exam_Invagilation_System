@@ -44,11 +44,21 @@ sidebar.addEventListener("mouseleave", () => {
     }
 });
 
+//darkLight.addEventListener("click", () => {
+//    body.classList.toggle("dark");
+//    darkLight.classList.toggle("bx-sun");
+//    darkLight.classList.toggle("bx-moon");
+//});
+
 darkLight.addEventListener("click", () => {
     body.classList.toggle("dark");
-    darkLight.classList.toggle("bx-sun");
-    darkLight.classList.toggle("bx-moon");
+    const isDark = body.classList.contains("dark");
+    localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
+
+    darkLight.classList.toggle("bx-sun", !isDark);
+    darkLight.classList.toggle("bx-moon", isDark);
 });
+
 
 window.addEventListener("resize", () => {
     if (window.innerWidth < 768) {
@@ -58,7 +68,7 @@ window.addEventListener("resize", () => {
     }
 });
 
-const profile = document.querySelector('.profile');
+const profile = document.querySelector('.navbar_content');
 const dropdown = document.querySelector('.dropdown_wrapper');
 profile.addEventListener('click', () => {
     dropdown.classList.remove('none');
@@ -75,8 +85,17 @@ document.addEventListener("click", (event) => {
 })
 
 document.addEventListener("DOMContentLoaded", function () {
-    const submenuItems = document.querySelectorAll(".submenu_item");
+    const darkMode = localStorage.getItem("darkMode");
+    if (darkMode === "enabled") {
+        body.classList.add("dark");
+        darkLight.classList.add("bx-moon");
+        darkLight.classList.remove("bx-sun");
+    } else {
+        darkLight.classList.add("bx-sun");
+        darkLight.classList.remove("bx-moon");
+    }
 
+    const submenuItems = document.querySelectorAll(".submenu_item");
     submenuItems.forEach(item => {
         item.addEventListener("click", function (event) {
             event.preventDefault(); // Prevent default anchor behavior

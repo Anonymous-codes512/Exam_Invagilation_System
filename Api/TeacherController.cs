@@ -68,6 +68,7 @@ namespace Exam_Invagilation_System.API
                     TimeSlot = report.date.ToString("hh:mm tt"), // Example: Convert date to time slot
                     UnfairType = report.unfairType,
                     OtherDetails = report.otherDetails,
+                    Status = "Pending",
                     IncidentDetails = report.incidentDetails,
                     RoomNumber = report.roomNumber
                 };

@@ -1,6 +1,16 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+	<script>
+		(function () {
+			try {
+				if (localStorage.getItem("darkMode") === "enabled") {
+					document.documentElement.classList.add("dark");
+				}
+			} catch (e) {}
+		})();
+	</script>
+
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
@@ -22,27 +32,36 @@
 				<img src="~/images/CUI WAH EIS.png" alt="">Exam_Invigilation_System
 			</div>
 
-			<div class="search_bar">
+			@* <div class="search_bar">
 				<input type="text" placeholder="Search" />
+			</div> *@
+
+			<div class="d-flex align-items-center gap-3 text-color justify-content-end">
+				<i class='bx bx-sun' id="darkLight"></i>
+
+				<div class="navbar_content d-flex align-items-center gap-2">
+					<img src="~/images/profile.jpg" alt="" class="profile" />
+					@using System.Security.Claims
+					@{
+						var email = User.FindFirstValue(ClaimTypes.Email);
+						var name = User.FindFirstValue(ClaimTypes.Name);
+					}
+					<div class="d-flex flex-column">
+						<p class="mb-0 fw-bold">@name</p>
+						<p class="mb-0 text-muted">@email</p>
+					</div>
+				</div>
 			</div>
 
-			<div class="navbar_content">
-				<i class='bx bx-sun' id="darkLight"></i>
-				<img src="~/images/profile.jpg" alt="" class="profile" />
-			</div>
+
 			<div class="dropdown_wrapper hide dropdown_wrapper--fade-in none">
 				<nav>
-					@* <ul> *@
-					@* 	<li> *@
-					@* 		<i class="bx bxs-user-circle"></i> *@
-					@* 		My profile *@
-					@* 	</li> *@
-					@* 	<li> *@
-					@* 		<i class="bx bx-cog"></i> *@
-					@* 		Account Settings *@
-					@* 	</li> *@
-					@* </ul> *@
-					@* <hr class="divider"> *@
+					 @* <ul>
+						<li data-bs-toggle="modal" data-bs-target="#profileModal">
+							<i class="bx bxs-user-circle"></i> My profile
+						</li>
+					 </ul>
+					 <hr class="divider"> *@
 					<ul>
 						<li>
 							<a class="text-decoration-none"  asp-controller="Auth" asp-action="Logout">
@@ -139,6 +158,95 @@
 				</div>
 			</nav>
 		</aside>
+		<!-- Profile Modal -->
+		<div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content p-3">
+					<div class="modal-header">
+						<h5 class="modal-title">My Profile</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+
+					<div class="modal-body">
+						<!-- Profile Card -->
+						<div class="card mb-4">
+							<div class="card-body d-flex gap-4 align-items-center">
+								<img src="~/images/profile.jpg" alt="Profile Picture" class="rounded-circle border" width="120" height="120" />
+								<div>
+									<h5 class="mb-1">@name</h5>
+									<p class="mb-0 text-muted">@email</p>
+									<p class="mb-0 text-muted">Other Info Here</p>
+								</div>
+							</div>
+						</div>
+
+						<!-- Password Change Card -->
+						<div class="card">
+							<div class="card-header">
+								<h6 class="mb-0">Change Password</h6>
+							</div>
+							<div class="card-body">
+								<form id="passwordForm">
+									<div class="mb-3 password-wrapper">
+										<label class="form-label">Current Password</label>
+										<input type="password" class="form-control password-field" required>
+										@* <i class="toggle-password bi bi-eye position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer"></i> *@
+									</div>
+									<div class="mb-3 password-wrapper">
+										<label class="form-label">New Password</label>
+										<input type="password" class="form-control password-field" id="newPassword" required>
+										@* <i class="toggle-password bi bi-eye position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer"></i> *@
+									</div>
+									<div class="mb-3 password-wrapper">
+										<label class="form-label">Confirm New Password</label>
+										<input type="password" class="form-control password-field" id="confirmPassword" required>
+										@* <i class="toggle-password bi bi-eye position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer"></i> *@
+									</div>
+									<div class="text-end">
+										<button type="submit" class="btn btn-primary">Change Password</button>
+									</div>
+								</form>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			// Password toggle
+			document.querySelectorAll(".toggle-password").forEach(icon => {
+				icon.addEventListener("click", function () {
+					const input = this.previousElementSibling;
+					if (input.type === "password") {
+						input.type = "text";
+						this.classList.replace("bi-eye", "bi-eye-slash");
+					} else {
+						input.type = "password";
+						this.classList.replace("bi-eye-slash", "bi-eye");
+					}
+				});
+			});
+
+			// Password validation
+			document.getElementById("passwordForm").addEventListener("submit", function (e) {
+				const newPass = document.getElementById("newPassword").value;
+				const confirmPass = document.getElementById("confirmPassword").value;
+
+				const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,16}$/;
+
+				if (newPass !== confirmPass) {
+					e.preventDefault();
+					alert("Passwords do not match!");
+				} else if (!regex.test(newPass)) {
+					e.preventDefault();
+					alert("Password must be 8-16 characters and include uppercase, lowercase, number, and special character.");
+				}
+			});
+		</script>
+
+
 		<main>
 
 			@if (TempData["success"] != null || TempData["error"] != null)
