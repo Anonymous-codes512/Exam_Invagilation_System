@@ -4,10 +4,10 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      //"applicationUrl": "http://192.168.100.12:34715",
+      "applicationUrl": "http://192.168.100.12:34715",
       //"applicationUrl": "http://192.168.100.55:34715",
-      "applicationUrl": "http://10.110.86.122:34715",
-      //"applicationUrl": "http://10.120.57.217:34715",
+      //"applicationUrl": "http://10.110.86.122:34715",
+      //"applicationUrl": "http://172.19.64.1:34715",
       "sslPort": 44331
     }
   },
@@ -16,10 +16,10 @@
         "commandName": "Project",
         "dotnetRunMessages": true,
         "launchBrowser": true,
-        //"applicationUrl": "http://192.168.100.12:5157;https://192.168.100.12:7035",
+        "applicationUrl": "http://192.168.100.12:5157;https://192.168.100.12:7035",
         //"applicationUrl": "http://192.168.100.55:5157;https://192.168.100.55:7035",
-        "applicationUrl": "http://10.110.86.122:5157;https://10.110.86.122:7035",
-        //"applicationUrl": "http://10.120.57.217:5157;https://10.120.57.217:7035",
+        //"applicationUrl": "http://10.110.86.122:5157;https://10.110.86.122:7035",
+        //"applicationUrl": "http://172.19.64.1:5157;https://172.19.64.1:7035",
 
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development"
@@ -29,10 +29,10 @@
         "commandName": "Project",
         "dotnetRunMessages": true,
         "launchBrowser": true,
-        //"applicationUrl": "http://192.168.100.12:5157;https://192.168.100.12:7035",
+        "applicationUrl": "http://192.168.100.12:5157;https://192.168.100.12:7035",
         //"applicationUrl": "http://192.168.100.55:5157;https://192.168.100.55:7035",
-        "applicationUrl": "http://10.110.86.122:5157;https://10.110.86.122:7035",
-        //"applicationUrl": "http://10.120.57.217;https://10.120.57.217:7035",
+        //"applicationUrl": "http://10.110.86.122:5157;https://10.110.86.122:7035",
+        //"applicationUrl": "http://172.19.64.1;https://172.19.64.1:7035",
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development"
         }
